@@ -1,6 +1,6 @@
 # Marlon MOBIOH
 # 12/04/2024
-# Télécharger le fichier = wget -P /tmp  https://github.com/MarlonMobioh/sorbonne-universite/blob/a45fe26de8d5204fc20205da49a32905619728e4/install_debian12_dev_mmo.sh
+# Télécharger le fichier = wget -P /tmp https://github.com/MarlonMobioh/sorbonne-universite/blob/3bfedba6bb031bbf6d09cea73762ab856e664920/install_debian12_dev_mmo.sh
 # Executer le fichier git = bash install_debian12_dev_mmo.sh
 # Voir en commentaire le détail de chaque commande
 
