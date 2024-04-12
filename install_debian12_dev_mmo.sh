@@ -49,30 +49,14 @@ for user_pass in "${user_passwords[@]}"; do
     fi
 done
 
-# Ajouter la configuration de firewall
-cat << EOF > /etc/firewalld/zones/work.xml
-<?xml version="1.0" encoding="utf-8"?>
-<zone>
-  <short>Work</short>
-  <description>For use in work areas. You mostly trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.</description>
-  <service name="ssh"/>
-  <service name="http"/>
-  <service name="https"/>
-  <source address="172.22.0.0/24"/>
-  <source address="10.50.0.0/18"/>
-  <source address="134.157.134.0/24"/>
-  <source address="10.11.20.0/22"/>
-  <source address="134.157.142.0/23"/>
-  <source address="134.157.1.240/23"/>
-  <source address="134.157.143.0/24"/>
-  <source address="10.11.7.239"/>
-  <source address="134.157.23.239"/>
-  <forward/>
-</zone>
-EOF
-
-echo "Configuration de firewall ajoutée dans work.xml."
-
-# Redémarrer le service firewalld pour appliquer les modifications
-systemctl restart firewalld
-echo "Le service firewalld a été redémarré."
+# Parcours des utilisateurs dans /home
+for user_home in /home/*/; do
+    username=$(basename "$user_home")
+    
+    # Vérifie si l'utilisateur n'est pas root
+    if [ "$username" != "root" ]; then
+        # Modifier le shell de l'utilisateur à "/usr/bin/bash"
+        usermod -s /usr/bin/bash "$username"
+        echo "Le shell de l'utilisateur $username a été modifié en /usr/bin/bash"
+    fi
+done
