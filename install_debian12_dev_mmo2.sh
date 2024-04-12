@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ##########################################################################################
-# Ce script modifie les parametres suivants sur un serveur lors d'une installation DEBIAN 11 :
+# Ce script modifie les parametres suivants sur un serveur lors d'une installation DEBIAN 11 et DEBIAN 12 :
 #
 # - Hostname
 # - Adressage IP [interface ens192]
