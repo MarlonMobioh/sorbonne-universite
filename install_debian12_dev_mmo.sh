@@ -12,6 +12,10 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 
+# Demander à l'utilisateur d'entrer le nom complet du serveur
+echo "Veuillez entrer le nom DNS du serveur :"
+read server_name
+
 # Définition des utilisateurs dans un tableau avec leur mot de passe respectif
 user_passwords=(
     "admin.ava6.mobioh:Sorbonne@2023"
@@ -87,3 +91,6 @@ echo "Configuration de firewall ajoutée dans work.xml."
 # Redémarrer le service firewalld pour appliquer les modifications
 systemctl restart firewalld
 echo "Le service firewalld a été redémarré."
+
+# Affichage du nom DSN du serveur
+echo "Le nom complet du serveur est : $server_name"
