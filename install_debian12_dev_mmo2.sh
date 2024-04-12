@@ -35,6 +35,7 @@ echo "Le nom de la machine a été modifié avec succès en : $new_hostname"
 
 
 # Demander à l'utilisateur l'adresse IP, le masque de sous-réseau et la passerelle
+# Valider les champs vides avec 'Entrer' si l'adresse ip ne doit pas etre changée
 read -p "Entrez l'adresse IP : " ip_address
 read -p "Entrez le masque de sous-réseau : " subnet_mask
 read -p "Entrez la passerelle par défaut : " gateway
