@@ -6,7 +6,7 @@
 # - Hostname
 # - Adressage IP [interface ens192]
 # - Création de l'ensemble des utilisateurs PEI ESI + esiansible
-# - Création des dossiers/fichiers authorized_keys des utilisateurs PEI ESI
+# - Création des dossiers et du fichier authorized_keys des utilisateurs PEI ESI
 # - Configuration du fichier snmpd
 # - Mise a jour des paquets [apt update]
 # - Modification du /root/.bashrc
@@ -182,9 +182,9 @@ sudo systemctl status snmpd
 #Update des paquets
 apt update -y
 apt upgrade -y
-apt install –y inxi
+apt install -y inxi
 #Installation postfix (stoppé et desactivé)
-apt install –y postfix
+apt install -y postfix
 systemctl stop postfix
 systemctl disable postfix
 apt install -y shellcheck
@@ -192,7 +192,7 @@ apt install -y htop
 apt install -y net-tools
 apt install -y psmisc
 apt install -y mailx
-apt install –y openssh-clients
+apt install -y openssh-clients
 apt install -y wget
 apt install -y htop
 apt install -y dstat
