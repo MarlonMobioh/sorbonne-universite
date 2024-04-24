@@ -131,7 +131,7 @@ for user_home in /home/*/; do
     fi
 done
 
-# Ajouter la configuration de firewall
+# Ajouter la configuration de firewall (DEV)
 firewall_config='<?xml version="1.0" encoding="utf-8"?>
 <zone>
   <short>Work</short>
