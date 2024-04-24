@@ -152,6 +152,7 @@ firewall_config='<?xml version="1.0" encoding="utf-8"?>
   <source address="134.157.1.128/25"/>
   <source address="134.157.254.117"/>
   <source address="134.157.23.239"/>
+  <forward/>
 </zone>'
 
 echo "$firewall_config" > /etc/firewalld/zones/work.xml
