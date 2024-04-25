@@ -34,8 +34,8 @@ read -p "Entrez l'adresse IP : " ip_address
 read -p "Entrez le masque de sous-réseau : " subnet_mask
 read -p "Entrez la passerelle par défaut : " gateway
 
-# Modifier le fichier /etc/sysconfig/network-scripts/ifcfg-ens192 avec les nouvelles valeurs
-cat <<EOF > /etc/sysconfig/network-scripts/ifcfg-ens192
+# Modifier le fichier /etc/sysconfig/network-scripts/ifcfg-ens33 avec les nouvelles valeurs
+cat <<EOF > /etc/sysconfig/network-scripts/ifcfg-ens33
 TYPE=Ethernet
 BOOTPROTO=none
 DEFROUTE=yes
@@ -44,8 +44,8 @@ IPV6INIT=yes
 IPV6_AUTOCONF=yes
 IPV6_DEFROUTE=yes
 IPV6_FAILURE_FATAL=no
-NAME=ens192
-DEVICE=ens192
+NAME=ens33
+DEVICE=ens33
 ONBOOT=yes
 IPADDR=$ip_address
 NETMASK=$subnet_mask
