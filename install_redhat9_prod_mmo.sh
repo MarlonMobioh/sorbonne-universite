@@ -81,7 +81,7 @@ echo "$machine_ip $machine_hostname" >> /etc/hosts
 
 
 # Définition des utilisateurs dans un tableau
-usernames=("admin.ava6.mobioh" "morelle" "nsalmi" "lechaffotec" "thiyfa" "fegard" "cherigui" "lesueurb" "munier" "mejdi" "chieze" "dasilvacase" "leveque" "mergoil" "naudin" "selami")
+usernames=("admin.ava6.mobioh" "morelle" "nsalmi" "lechaffotec" "fegard" "cherigui" "mejdi")
 
 # Fonction pour vérifier l'appartenance d'un utilisateur au groupe wheel (équivalent de sudo)
 user_in_wheel_group() {
