@@ -12,5 +12,5 @@ bash /tmp/install_debian12_prod_mmo.sh
 
 PROD REDHAT 9
 cd /tmp
-https://raw.githubusercontent.com/MarlonMobioh/sorbonne-universite/main/install_redhat9_prod_mmo.sh
+wget https://raw.githubusercontent.com/MarlonMobioh/sorbonne-universite/main/install_redhat9_prod_mmo.sh
 bash /tmp/install_redhat9_prod_mmo.sh
