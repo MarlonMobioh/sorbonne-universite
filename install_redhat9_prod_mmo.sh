@@ -198,6 +198,8 @@ firewall_config='<?xml version="1.0" encoding="utf-8"?>
   <forward/>
 </zone>'
 
+echo "$firewall_config" > /etc/firewalld/zones/work.xml
+echo "Configuration de firewall ajoutée dans work.xml."
 
 # Installation de paquets et mise à jour
 dnf update -y
