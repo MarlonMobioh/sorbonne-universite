@@ -78,10 +78,15 @@ fi
 # Ajouter une entrée dans /etc/hosts
 echo "$machine_ip $machine_hostname" >> /etc/hosts
 
-
-
-# Définition des utilisateurs dans un tableau
-usernames=("admin.ava6.mobioh" "morelle" "nsalmi" "lechaffotec" "fegard" "cherigui" "mejdi")
+# Définition des utilisateurs dans un tableau avec leur mot de passe respectif
+user_passwords=(
+    "admin.ava6.mobioh:Sorbonne@2023"
+    "mejdi:%toto;2010"
+    "lechaffotec:lechaffotec123!"
+    "morelle:gzr5^dwgPsirLg"
+    "cherigui:123@@@-AZE"
+    "fegard:@EoVqEL12378"
+)
 
 # Fonction pour vérifier l'appartenance d'un utilisateur au groupe wheel (équivalent de sudo)
 user_in_wheel_group() {
@@ -97,16 +102,6 @@ for username in "${usernames[@]}"; do
     else
         # Créer l'utilisateur
         useradd -m -s /bin/bash "$username"
-
-        # Créer le mot de passe avec le suffixe "123!" et une majuscule au début sauf pour admin.ava6.mobioh
-        if [ "$username" != "admin.ava6.mobioh" ]; then
-            password="$(echo "${username^}")123!"
-        else
-            password="Sorbonne@2023"
-        fi
-
-        echo "$username:$password" | chpasswd
-        echo "Utilisateur $username créé avec le mot de passe $password."
 
         # Vérifier si l'utilisateur est déjà dans le groupe wheel
         if ! user_in_wheel_group "$username"; then
