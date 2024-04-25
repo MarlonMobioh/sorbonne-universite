@@ -175,7 +175,28 @@ systemctl restart snmpd
 # Afficher le statut du service SNMP
 systemctl status snmpd
 
-
+# Ajouter la configuration de firewall (PROD)
+firewall_config='<?xml version="1.0" encoding="utf-8"?>
+<zone>
+  <short>Work</short>
+  <description>For use in work areas. You mostly trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.</description>
+  <service name="ssh"/>
+  <service name="cockpit"/>
+  <source address="172.22.0.0/24"/>
+  <source address="10.50.0.0/18"/>
+  <source address="134.157.143.0/24"/>
+  <source address="134.157.142.0/24"/>
+  <source address="134.157.126.0/23"/>
+  <source address="134.157.150.0/24"/>
+  <source address="134.157.164.0/23"/>
+  <source address="134.157.134.0/24"/>
+  <source address="134.157.23.0/24"/>
+  <source address="134.157.134.91"/>
+  <source address="134.157.1.128/25"/>
+  <source address="134.157.254.117"/>
+  <source address="134.157.23.239"/>
+  <forward/>
+</zone>'
 
 
 # Installation de paquets et mise à jour
