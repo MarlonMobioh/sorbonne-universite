@@ -60,20 +60,23 @@ systemctl restart NetworkManager
 echo "Adresse IP changée avec succès. Nouvelles valeurs :"
 ip addr show ens192 | grep -w inet
 
-
-
 # Déterminer l'adresse IP de la machine
 machine_ip=$(hostname -I | awk '{print $1}')
 
 # Nom d'hôte à associer
 machine_hostname=$(hostname)
 
-
 # Vérifier si l'adresse IP et le nom d'hôte sont définis dans /etc/hosts
 if [[ -z "$machine_ip" || -z "$machine_hostname" ]]; then
     echo "Impossible de récupérer l'adresse IP ou le nom d'hôte. Arrêt du script."
     exit 1
 fi
+
+# Fonction pour vérifier l'appartenance d'un utilisateur au groupe wheel (équivalent de sudo)
+user_in_wheel_group() {
+    local username="$1"
+    grep -q "^wheel:x:.*$username" /etc/group
+}
 
 # Ajouter une entrée dans /etc/hosts
 echo "$machine_ip $machine_hostname" >> /etc/hosts
@@ -88,20 +91,19 @@ user_passwords=(
     "fegard:@EoVqEL12378"
 )
 
-# Fonction pour vérifier l'appartenance d'un utilisateur au groupe wheel (équivalent de sudo)
-user_in_wheel_group() {
-    local username="$1"
-    grep -q "^wheel:x:.*$username" /etc/group
-}
-
 # Boucle pour créer les utilisateurs
-for username in "${usernames[@]}"; do
+for user_info in "${user_passwords[@]}"; do
+    # Extraire le nom d'utilisateur et le mot de passe du tableau
+    username=$(echo "$user_info" | cut -d ":" -f 1)
+    password=$(echo "$user_info" | cut -d ":" -f 2)
+
     # Vérifier si l'utilisateur existe déjà
     if id "$username" &>/dev/null; then
         echo "L'utilisateur $username existe déjà. Ignorer la création."
     else
-        # Créer l'utilisateur
+        # Créer l'utilisateur avec le mot de passe spécifié
         useradd -m -s /bin/bash "$username"
+        echo "$username:$password" | chpasswd
 
         # Vérifier si l'utilisateur est déjà dans le groupe wheel
         if ! user_in_wheel_group "$username"; then
@@ -113,6 +115,7 @@ for username in "${usernames[@]}"; do
         fi
     fi
 done
+
 
 # Parcourir tous les répertoires utilisateur sous /home
 for user_home in /home/*; do
