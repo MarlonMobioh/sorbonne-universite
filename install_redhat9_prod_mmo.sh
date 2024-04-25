@@ -264,6 +264,7 @@ source ~/.bashrc
 systemctl list-units --type=service
 
 #Enregistrement dans RedHat (mmobioh ; Sorbonne@2023)
+echo "Enregistrement dans RedHat :"
 subscription-manager clean
 subscription-manager register
 subscription-manager list --available
