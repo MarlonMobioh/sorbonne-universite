@@ -13,6 +13,8 @@
 # - Modification du /root/.bashrc
 # - Vérifier que tous les services critiques sont en cours d’exécution
 #
+# - PROXY A CONFIGURER
+#
 ##########################################################################################
 
 # Vérifier si l'utilisateur courant est root
