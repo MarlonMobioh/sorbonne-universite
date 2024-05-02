@@ -212,6 +212,7 @@ apt install -y telnet
 apt install -y rsync 
 apt install -y lsof
 apt install -y vim
+apt install -y nmap
 
 
 # Modification du /root/.bashrc
