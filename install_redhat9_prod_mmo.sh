@@ -212,6 +212,8 @@ dnf install -y htop
 dnf install -y net-tools
 dnf install -y mailx
 apt install -y mailutils
+apt install -y sasl2-bin
+apt install -y rsyslog
 dnf install -y openssh-clients
 dnf install -y wget
 dnf install -y dstat
