@@ -192,6 +192,8 @@ apt install -y postfix
 systemctl stop postfix
 systemctl disable postfix
 apt install -y mailutils
+apt install -y sasl2-bin
+apt install -y rsyslog
 apt install -y shellcheck
 apt install -y htop
 apt install -y net-tool
