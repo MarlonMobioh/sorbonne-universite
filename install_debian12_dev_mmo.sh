@@ -194,6 +194,8 @@ apt install -y net-tools
 apt install -y psmisc
 apt install -y mailx
 apt install -y mailutils
+apt install -y sasl2-bin
+apt install -y rsyslog
 apt install -y openssh-clients
 apt install -y wget
 apt install -y htop
