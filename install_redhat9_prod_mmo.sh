@@ -211,6 +211,7 @@ systemctl disable postfix
 dnf install -y htop
 dnf install -y net-tools
 dnf install -y mailx
+apt install -y mailutils
 dnf install -y openssh-clients
 dnf install -y wget
 dnf install -y dstat
