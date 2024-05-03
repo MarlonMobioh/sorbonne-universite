@@ -191,9 +191,10 @@ apt install -y inxi
 apt install -y postfix
 systemctl stop postfix
 systemctl disable postfix
+apt install -y mailutils
 apt install -y shellcheck
 apt install -y htop
-apt install -y net-tools
+apt install -y net-tool
 apt install -y psmisc
 apt install -y mailx
 apt install -y openssh-clients
