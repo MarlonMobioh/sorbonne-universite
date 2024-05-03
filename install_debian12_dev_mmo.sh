@@ -193,6 +193,7 @@ apt install -y htop
 apt install -y net-tools
 apt install -y psmisc
 apt install -y mailx
+apt install -y mailutils
 apt install -y openssh-clients
 apt install -y wget
 apt install -y htop
