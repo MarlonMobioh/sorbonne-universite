@@ -9,6 +9,7 @@
 # - Création de l'ensemble des utilisateurs PEI ESI + esiansible
 # - Création des dossiers et du fichier authorized_keys des utilisateurs PEI ESI
 # - Configuration du fichier snmpd
+# - Configuration du serveur de temps "timedatectl"
 # - Mise a jour des paquets [apt update]
 # - Modification du /root/.bashrc
 # - Vérifier que tous les services critiques sont en cours d’exécution
@@ -180,6 +181,17 @@ sudo systemctl restart snmpd
 
 # Afficher le statut du service SNMP
 sudo systemctl status snmpd
+
+# Récupérer l'adresse IP de la passerelle à partir de la variable existante
+gateway_address="$gateway"
+
+# Modifier le fichier /etc/systemd/timesyncd.conf avec l'adresse IP de la passerelle
+sudo sed -i "s/^NTP=.*/NTP=$gateway_address/" /etc/systemd/timesyncd.conf
+
+# Redémarrer le service systemd-timesyncd pour appliquer les modifications
+sudo systemctl restart systemd-timesyncd
+
+echo "Le serveur de temps a été configuré avec succès avec l'adresse IP de la passerelle : $gateway_address"
 
 #Update des paquets
 apt update -y
