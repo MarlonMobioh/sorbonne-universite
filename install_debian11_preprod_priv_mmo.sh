@@ -258,6 +258,9 @@ source /root/.bashrc
 # Vérifier que tous les services critiques sont en cours d’exécution
 sudo systemctl list-units --type=service
 
+# Vidage du contenu des fichiers de journalisation système
+echo "" > /var/log/wtmp
+echo "" > /var/log/lastlog
 
 # Message de fin de script
 echo "Fin du script."
