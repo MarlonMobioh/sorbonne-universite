@@ -181,6 +181,8 @@ firewall_config='<?xml version="1.0" encoding="utf-8"?>
   <short>Work</short>
   <description>For use in work areas. You mostly trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.</description>
   <service name="ssh"/>
+  <service name="http"/>
+  <service name="https"/>
   <service name="cockpit"/>
   <source address="172.22.0.0/24"/>
   <source address="10.50.0.0/18"/>
