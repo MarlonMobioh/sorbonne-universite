@@ -275,6 +275,9 @@ subscription-manager register
 subscription-manager list --available
 subscription-manager attach --pool=8a85f99977b0c0420177f2a086211111
 
+# Vidage du contenu des fichiers de journalisation système
+echo "" > /var/log/wtmp
+echo "" > /var/log/lastlog
 
 # Message de fin de script
 echo "Fin du script."
