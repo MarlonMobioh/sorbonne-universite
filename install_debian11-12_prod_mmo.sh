@@ -62,9 +62,6 @@ iface ens192 inet static
         dns-search sorbonne-universite.fr dsi.sorbonne-universite.fr
 " > /etc/network/interfaces
 
-# Redémarrer le service réseau pour appliquer les modifications
-systemctl restart networking
-
 echo "Adresse IP changée avec succès. Nouvelles valeurs :"
 ip addr show ens192 | grep -w inet
 
@@ -262,6 +259,9 @@ sudo systemctl list-units --type=service
 # Vidage du contenu des fichiers de journalisation système
 echo "" > /var/log/wtmp
 echo "" > /var/log/lastlog
+
+# Redémarrer le service réseau pour appliquer les modifications
+systemctl restart networking
 
 # Message de fin de script
 echo "Fin du script."
