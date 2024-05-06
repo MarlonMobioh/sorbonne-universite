@@ -9,6 +9,7 @@
 # - Création de l'ensemble des utilisateurs PEI ESI + esiansible
 # - Création des dossiers/fichiers authorized_keys des utilisateurs PEI ESI
 # - Configuration du fichier snmpd
+# - Configuration du serveur de temps "timedatectl"
 # - Mise a jour des paquets [dnf update]
 # - Modification du /root/.bashrc
 # - Vérifier que tous les services critiques sont en cours d’exécution
@@ -202,6 +203,14 @@ firewall_config='<?xml version="1.0" encoding="utf-8"?>
 
 echo "$firewall_config" > /etc/firewalld/zones/work.xml
 echo "Configuration de firewall ajoutée dans work.xml."
+
+# Modifier le fichier /etc/systemd/timesyncd.conf avec l'adresse IP de la passerelle
+sudo sed -i "s/^NTP=.*/NTP=$gateway/" /etc/systemd/timesyncd.conf
+
+# Redémarrer le service systemd-timesyncd pour appliquer les modifications
+sudo systemctl restart systemd-timesyncd
+
+echo "Le serveur de temps a été configuré avec succès avec l'adresse IP de la passerelle : $gateway"
 
 # Installation de paquets et mise à jour
 dnf update -y
