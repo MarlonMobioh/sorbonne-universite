@@ -259,6 +259,9 @@ sudo systemctl list-units --type=service
 echo "" > /var/log/wtmp
 echo "" > /var/log/lastlog
 
+# Suppression history
+history -c
+
 # Message de fin de script
 echo "Fin du script."
 
