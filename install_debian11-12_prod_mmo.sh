@@ -263,6 +263,9 @@ sudo systemctl list-units --type=service
 echo "" > /var/log/wtmp
 echo "" > /var/log/lastlog
 
+# Suppression history
+history -c
+
 # Redémarrer le service réseau pour appliquer les modifications
 systemctl restart networking
 
