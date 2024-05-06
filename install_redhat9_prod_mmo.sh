@@ -281,6 +281,9 @@ subscription-manager attach --pool=8a85f99977b0c0420177f2a086211111
 echo "" > /var/log/wtmp
 echo "" > /var/log/lastlog
 
+# Suppression history
+history -c
+
 # Message de fin de script
 echo "Fin du script."
 
