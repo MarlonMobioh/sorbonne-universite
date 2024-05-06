@@ -9,6 +9,7 @@
 # - Création de l'ensemble des utilisateurs PEI ESI + esiansible
 # - Création des dossiers et du fichier authorized_keys des utilisateurs PEI ESI
 # - Configuration du fichier snmpd
+# - Configuration du serveur de temps "timedatectl"
 # - Mise a jour des paquets [apt update]
 # - Modification du /root/.bashrc
 # - Vérifier que tous les services critiques sont en cours d’exécution
