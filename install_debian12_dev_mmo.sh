@@ -140,6 +140,7 @@ firewall_config='<?xml version="1.0" encoding="utf-8"?>
   <service name="ssh"/>
   <service name="http"/>
   <service name="https"/>
+  <service name="cockpit"/>
   <source address="172.22.0.0/24"/>
   <source address="10.50.0.0/18"/>
   <source address="134.157.134.0/24"/>
