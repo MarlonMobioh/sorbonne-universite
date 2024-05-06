@@ -185,6 +185,17 @@ sudo systemctl restart snmpd
 # Afficher le statut du service SNMP
 sudo systemctl status snmpd
 
+# Récupérer l'adresse IP de la passerelle à partir de la variable existante
+gateway_address="$gateway"
+
+# Modifier le fichier /etc/systemd/timesyncd.conf avec l'adresse IP de la passerelle
+sudo sed -i "s/^NTP=.*/NTP=$gateway_address/" /etc/systemd/timesyncd.conf
+
+# Redémarrer le service systemd-timesyncd pour appliquer les modifications
+sudo systemctl restart systemd-timesyncd
+
+echo "Le serveur de temps a été configuré avec succès avec l'adresse IP de la passerelle : $gateway_address"
+
 #Update des paquets
 apt update -y
 apt upgrade -y
