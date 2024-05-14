@@ -149,7 +149,7 @@ firewall_config='<?xml version="1.0" encoding="utf-8"?>
   <source address="10.50.0.0/18"/>
   <source address="134.157.134.0/24"/>
   <source address="10.11.20.0/22"/>
-  <source address="134.157.142.0/23"/>
+  <source address="134.157.142.0/24"/>
   <source address="134.157.1.240/23"/>
   <source address="134.157.143.0/24"/>
   <source address="10.11.7.239"/>
