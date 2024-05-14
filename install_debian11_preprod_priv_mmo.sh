@@ -66,7 +66,10 @@ iface ens192 inet static
 " > /etc/network/interfaces
 
 # Redémarrer le service réseau pour appliquer les modifications
-systemctl restart networking
+##### systemctl restart networking
+ifdown ens192
+ifup ens192
+##### ip link set ens192 up
 
 echo "Adresse IP changée avec succès. Nouvelles valeurs :"
 ip addr show ens192 | grep -w inet
