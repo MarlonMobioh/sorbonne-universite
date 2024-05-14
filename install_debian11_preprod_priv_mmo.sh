@@ -155,6 +155,7 @@ firewall_config='<?xml version="1.0" encoding="utf-8"?>
   <source address="134.157.1.240/23"/>
   <source address="10.11.16.0/22"/>
   <source address="10.11.19.239"/>
+  <source address="134.157.254.8"/>
   <forward/>
 </zone>'
 
