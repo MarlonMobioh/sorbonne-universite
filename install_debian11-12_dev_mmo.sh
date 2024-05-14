@@ -53,7 +53,8 @@ auto lo
 iface lo inet loopback
 
 # The primary network interface
-##### allow-hotplug ens192
+auto ens 192
+allow-hotplug ens192
 iface ens192 inet static
 	address $ip_address
 	netmask $subnet_mask
