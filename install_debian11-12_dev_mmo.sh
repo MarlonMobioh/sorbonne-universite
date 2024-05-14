@@ -234,6 +234,8 @@ apt install -y vim
 
 
 # Modification du /root/.bashrc
+# Default prompt en cas de problème :
+# export PS1='\[\033[01;31m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 
 CONTENTBASHRCADD="# ------------------------
 # Configuration du prompt
