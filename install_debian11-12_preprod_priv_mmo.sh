@@ -55,6 +55,7 @@ auto lo
 iface lo inet loopback
 
 # The primary network interface
+auto ens 192
 allow-hotplug ens192
 iface ens192 inet static
 	address $ip_address
