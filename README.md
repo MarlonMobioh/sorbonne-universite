@@ -2,7 +2,7 @@ Pour lancer le script :
 
 # DEV DEBIAN 12
 cd /tmp
-wget https://raw.githubusercontent.com/MarlonMobioh/sorbonne-universite/main/install_debian12_dev_mmo.sh
+wget https://raw.githubusercontent.com/MarlonMobioh/sorbonne-universite/main/install_debian11-12_dev_mmo.sh
 bash /tmp/install_debian12_dev_mmo.sh
 
 # PROD DEBIAN 11 et 12
