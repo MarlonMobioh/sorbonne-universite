@@ -166,6 +166,12 @@ echo "Configuration de firewall ajoutée dans work.xml."
 systemctl restart firewalld
 echo "Le service firewalld a été redémarré."
 
+# Ouvrir les ports web sur le pare-feu local
+firewall-cmd --zone=public --add-port=80/tcp --permanent
+firewall-cmd --zone=public --add-port=443/tcp --permanent
+firewall-cmd --zone=work --add-port=443/tcp --permanent
+firewall-cmd --zone=work --add-port=80/tcp --permanent
+
 #Création du compte esiansible SU
 wget https://gitlab.dsi.sorbonne-universite.fr/cherigui/dsi-public/-/raw/main/mise_en_conformite_esiansible.sh
 bash mise_en_conformite_esiansible.sh
