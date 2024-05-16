@@ -53,8 +53,7 @@ auto lo
 iface lo inet loopback
 
 # The primary network interface
-auto ens 192
-allow-hotplug ens192
+auto ens192
 iface ens192 inet static
 	address $ip_address
 	netmask $subnet_mask
@@ -65,10 +64,10 @@ iface ens192 inet static
 " > /etc/network/interfaces
 
 # Redémarrer le service réseau pour appliquer les modifications
-##### systemctl restart networking
-ifdown ens192
-ifup ens192
-##### ip link set ens192 up
+systemctl restart networking
+#ifdown ens192
+#ifup ens192
+#ip link set ens192 up
 
 echo "Adresse IP changée avec succès. Nouvelles valeurs :"
 ip addr show ens192 | grep -w inet
