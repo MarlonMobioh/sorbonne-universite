@@ -198,16 +198,19 @@ sudo systemctl restart systemd-timesyncd
 
 echo "Le serveur de temps a été configuré avec succès avec l'adresse IP de la passerelle : $gateway_address"
 
-#Update des paquets
-apt update -y
-apt upgrade -y
+# Update des paquets
+apt-get update && apt-get -y upgrade && apt autoremove -y && apt-get clean -y
+
+# Retirer X11 pour améliorer les performances et la sécurité
+apt-get purge x11-common libwayland-server0
+
+# Installation des paquets utiles
 apt install -y inxi
 #Installation postfix (stoppé et desactivé)
 apt install -y postfix
 systemctl stop postfix
 systemctl disable postfix
 apt install -y shellcheck
-apt install -y htop
 apt install -y net-tools
 apt install -y psmisc
 apt install -y mailx
@@ -229,10 +232,9 @@ apt install -y whois
 apt install -y traceroute
 apt install -y unzip
 apt install -y telnet 
-apt install -y rsync 
 apt install -y lsof
 apt install -y vim
-
+apt install -y ccze mc tmux rsync htop net-tools dnsutils
 
 # Modification du /root/.bashrc
 # Default prompt en cas de problème :
