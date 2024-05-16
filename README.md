@@ -6,7 +6,7 @@ wget https://raw.githubusercontent.com/MarlonMobioh/SU/main/install_debian11-12_
 bash /tmp/install_debian11-12_dev_mmo.sh
 
 
-# PREPROD PRIV DEBIAN 11-12
+# PREPROD_PRIV DEBIAN 11-12
 cd /tmp
 wget https://raw.githubusercontent.com/MarlonMobioh/SU/main/install_debian11_preprod_priv_mmo.sh
 bash /tmp/install_debian11_preprod_priv_mmo.sh
