@@ -1,11 +1,17 @@
 Pour lancer le script :
 
-# DEV DEBIAN 12
+# DEV DEBIAN 11-12
 cd /tmp
 wget https://raw.githubusercontent.com/MarlonMobioh/SU/main/install_debian11-12_dev_mmo.sh
 bash /tmp/install_debian11-12_dev_mmo.sh
 
-# PROD DEBIAN 11 et 12
+
+# PREPROD PRIV DEBIAN 11-12
+cd /tmp
+wget https://raw.githubusercontent.com/MarlonMobioh/SU/main/install_debian11_preprod_priv_mmo.sh
+bash /tmp/install_debian11_preprod_priv_mmo.sh
+
+# PROD DEBIAN 11-12
 cd /tmp
 wget https://raw.githubusercontent.com/MarlonMobioh/SU/main/install_debian11-12_prod_mmo.sh
 bash /tmp/install_debian11-12_prod_mmo.sh
@@ -14,8 +20,3 @@ bash /tmp/install_debian11-12_prod_mmo.sh
 cd /tmp
 wget https://raw.githubusercontent.com/MarlonMobioh/SU/main/install_redhat9_prod_mmo.sh
 bash /tmp/install_redhat9_prod_mmo.sh
-
-# PREPROD PRIV DEBIAN 11
-cd /tmp
-wget https://raw.githubusercontent.com/MarlonMobioh/SU/main/install_debian11_preprod_priv_mmo.sh
-bash /tmp/install_debian11_preprod_priv_mmo.sh
