@@ -8,8 +8,8 @@ bash /tmp/install_debian11-12_dev_mmo.sh
 
 # PREPROD_PRIV DEBIAN 11-12
 cd /tmp
-wget https://raw.githubusercontent.com/MarlonMobioh/SU/main/install_debian11_preprod_priv_mmo.sh
-bash /tmp/install_debian11_preprod_priv_mmo.sh
+wget https://raw.githubusercontent.com/MarlonMobioh/SU/main/install_debian11-12_preprod_priv_mmo.sh
+bash /tmp/install_debian11-12_preprod_priv_mmo.sh
 
 # PROD DEBIAN 11-12
 cd /tmp
