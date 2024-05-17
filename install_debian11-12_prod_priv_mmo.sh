@@ -301,8 +301,9 @@ apt install -y lsof
 apt install -y vim
 apt install -y ccze mc tmux rsync htop net-tools dnsutils
 
-
 # Modification du /root/.bashrc
+# Default prompt en cas de problème :
+# export PS1='\[\033[01;31m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 
 CONTENTBASHRCADD="# ~/.bashrc: executed by bash(1) for non-login shells.
 
@@ -349,11 +350,10 @@ export PATH="/snap/bin/:$PATH"
 "
 
 # Ajouter le contenu CONTENTBASHRCADD à la fin du fichier .bashrc
-echo "$CONTENTBASHRCADD" > /root/.bashrc
-
+echo "$CONTENTBASHRCADD" > /root/.bashrc"
 echo "Contenu ajouté avec succès à /root/.bashrc."
-
 source /root/.bashrc
+
 #systemctl restart logrotate.service
 
 # Vérifier que tous les services critiques sont en cours d’exécution
