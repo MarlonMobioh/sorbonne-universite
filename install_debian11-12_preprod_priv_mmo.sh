@@ -6,6 +6,7 @@
 #
 # - Hostname
 # - Adressage IP [interface ens192]
+# - Configuation du proxy dans /etc/environment
 # - Création de l'ensemble des utilisateurs PEI ESI + esiansible
 # - Création des dossiers et du fichier authorized_keys des utilisateurs PEI ESI
 # - Configuration du fichier snmpd
@@ -13,8 +14,6 @@
 # - Mise a jour des paquets [apt update]
 # - Modification du /root/.bashrc
 # - Vérifier que tous les services critiques sont en cours d’exécution
-#
-# - PROXY A CONFIGURER
 #
 ##########################################################################################
 
@@ -73,6 +72,32 @@ systemctl restart networking
 
 echo "Adresse IP changée avec succès. Nouvelles valeurs :"
 ip addr show ens192 | grep -w inet
+
+# Demande à l'utilisateur de saisir l'adresse du proxy
+echo "Quel est l'adresse du proxy de la machine ?"
+read new_proxy
+
+# Configuration des paramètres du proxy
+PROXY_URL="$new_proxy"
+NO_PROXY="localhost,127.0.0.1,::1"
+
+# Configurer les variables d'environnement pour le proxy de manière permanente
+sudo sh -c "echo 'http_proxy=$PROXY_URL' >> /etc/environment"
+sudo sh -c "echo 'https_proxy=$PROXY_URL' >> /etc/environment"
+sudo sh -c "echo 'ftp_proxy=$PROXY_URL' >> /etc/environment"
+sudo sh -c "echo 'no_proxy=$NO_PROXY' >> /etc/environment"
+
+# Configurer le proxy pour APT de manière permanente
+echo "Acquire::http::Proxy \"$PROXY_URL\";" | sudo tee /etc/apt/apt.conf.d/01proxy
+echo "Acquire::https::Proxy \"$PROXY_URL\";" | sudo tee -a /etc/apt/apt.conf.d/01proxy
+echo "Acquire::ftp::Proxy \"$PROXY_URL\";" | sudo tee -a /etc/apt/apt.conf.d/01proxy
+
+# Vérification de la configuration du proxy
+echo "Les variables d'environnement de proxy sont configurées comme suit :"
+cat /etc/environment | grep -E 'http_proxy|https_proxy|ftp_proxy|no_proxy'
+
+echo "Le fichier de configuration APT est configuré comme suit :"
+cat /etc/apt/apt.conf.d/01proxy
 
 # Déterminer l'adresse IP de la machine
 machine_ip=$(hostname -I | awk '{print $1}')
