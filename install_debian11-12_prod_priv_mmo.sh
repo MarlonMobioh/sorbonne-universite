@@ -349,7 +349,7 @@ export PATH="/snap/bin/:$PATH"
 "
 
 # Ajouter le contenu CONTENTBASHRCADD à la fin du fichier .bashrc
-echo "$CONTENTBASHRCADD" >> /root/.bashrc
+echo "$CONTENTBASHRCADD" > /root/.bashrc
 
 echo "Contenu ajouté avec succès à /root/.bashrc."
 
