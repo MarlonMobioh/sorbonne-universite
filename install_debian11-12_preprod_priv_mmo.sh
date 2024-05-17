@@ -232,6 +232,10 @@ sudo systemctl restart systemd-timesyncd
 
 echo "Le serveur de temps a été configuré avec succès avec l'adresse IP de la passerelle : $gateway_address"
 
+# Update des paquets
+apt-get update && apt-get -y upgrade && apt autoremove -y && apt-get clean -y
+# Retirer X11 pour améliorer les performances et la sécurité
+apt-get purge x11-common libwayland-server0
 # Installation des paquets utiles
 apt install -y inxi
 #Installation postfix (stoppé et desactivé)
