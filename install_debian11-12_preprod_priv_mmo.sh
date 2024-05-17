@@ -190,6 +190,12 @@ firewall_config='<?xml version="1.0" encoding="utf-8"?>
 echo "$firewall_config" > /etc/firewalld/zones/work.xml
 echo "Configuration de firewall ajoutée dans work.xml."
 
+# Ouvrir les ports web sur le pare-feu local
+firewall-cmd --zone=public --add-port=80/tcp --permanent
+firewall-cmd --zone=public --add-port=443/tcp --permanent
+firewall-cmd --zone=work --add-port=443/tcp --permanent
+firewall-cmd --zone=work --add-port=80/tcp --permanent
+
 # Redémarrer le service firewalld pour appliquer les modifications
 systemctl restart firewalld
 echo "Le service firewalld a été redémarré."
@@ -226,22 +232,19 @@ sudo systemctl restart systemd-timesyncd
 
 echo "Le serveur de temps a été configuré avec succès avec l'adresse IP de la passerelle : $gateway_address"
 
-#Update des paquets
-apt update -y
-apt upgrade -y
+# Installation des paquets utiles
 apt install -y inxi
 #Installation postfix (stoppé et desactivé)
 apt install -y postfix
 systemctl stop postfix
 systemctl disable postfix
+apt install -y shellcheck
+apt install -y net-tools
+apt install -y psmisc
+apt install -y mailx
 apt install -y mailutils
 apt install -y sasl2-bin
 apt install -y rsyslog
-apt install -y shellcheck
-apt install -y htop
-apt install -y net-tool
-apt install -y psmisc
-apt install -y mailx
 apt install -y openssh-clients
 apt install -y wget
 apt install -y htop
@@ -257,10 +260,9 @@ apt install -y whois
 apt install -y traceroute
 apt install -y unzip
 apt install -y telnet 
-apt install -y rsync 
 apt install -y lsof
 apt install -y vim
-apt install -y nmap
+apt install -y ccze mc tmux rsync htop net-tools dnsutils
 
 
 # Modification du /root/.bashrc
