@@ -24,7 +24,7 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 # Demande à l'utilisateur de saisir le nouveau nom de la machine
-echo "Quel est le nouveau nom complet de la machine ?"
+echo "Quel est le nouveau nom complet de la machine ? (format = server1.prod.dsi.priv.sorbonne-universite.fr)"
 read new_hostname
 
 # Modification du nom d'hôte
@@ -74,7 +74,7 @@ echo "Adresse IP changée avec succès. Nouvelles valeurs :"
 ip addr show ens192 | grep -w inet
 
 # Demande à l'utilisateur de saisir l'adresse du proxy
-echo "Quel est l'adresse du proxy de la machine ?"
+echo "Quel est l'adresse du proxy de la machine ? (format = http://XXX.XXX.XXX.XXX/)"
 read new_proxy
 
 # Configuration des paramètres du proxy
