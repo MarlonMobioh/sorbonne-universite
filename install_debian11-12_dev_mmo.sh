@@ -23,7 +23,7 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 # Demande à l'utilisateur de saisir le nouveau nom de la machine
-echo "Quel est le nouveau nom complet de la machine ?"
+echo "Quel est le nouveau nom complet de la machine ? (format = server1.dev.dsi.priv.sorbonne-universite.fr)"
 read new_hostname
 
 # Modification du nom d'hôte
