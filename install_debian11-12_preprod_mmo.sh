@@ -171,7 +171,7 @@ for user_home in /home/*; do
     fi
 done
 
-# Ajouter la configuration de firewall (DEV)
+# Ajouter la configuration de firewall (PREPROD)
 firewall_config='<?xml version="1.0" encoding="utf-8"?>
 <zone>
   <short>Work</short>
@@ -313,7 +313,7 @@ alias zones='firewall-cmd  --list-all-zones |egrep -A50 "external|dmz|home|publi
 alias zones1='firewall-cmd  --list-all-zones|less'
 alias services='systemctl list-unit-files --type=service --state=enabled'
 
-# You may uncomment the following lines if you want 'ls' to be colorized:
+# You may uncomment the following lines if you want ls to be colorized:
 # export LS_OPTIONS='--color=auto'
 # eval "$(dircolors)"
  alias ls='ls $LS_OPTIONS'
