@@ -200,6 +200,15 @@ firewall_config='<?xml version="1.0" encoding="utf-8"?>
 echo "$firewall_config" > /etc/firewalld/zones/work.xml
 echo "Configuration de firewall ajoutée dans work.xml."
 
+# Ouvrir les ports web sur le pare-feu local
+firewall-cmd --zone=public --add-port=80/tcp --permanent
+firewall-cmd --zone=public --add-port=443/tcp --permanent
+firewall-cmd --zone=work --add-port=443/tcp --permanent
+firewall-cmd --zone=work --add-port=80/tcp --permanent
+
+# Ouvrir le port EON (supervision)
+firewall-cmd --permanent --add-port=161/udp
+
 # Redémarrer le service firewalld pour appliquer les modifications
 systemctl restart firewalld
 echo "Le service firewalld a été redémarré."
