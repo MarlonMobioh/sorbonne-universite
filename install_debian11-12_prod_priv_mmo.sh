@@ -217,7 +217,6 @@ firewall_config='<?xml version="1.0" encoding="utf-8"?>
   <source address="10.11.5.0/22"/>
   <source address="134.157.1.128/25"/>
   <source address="134.157.254.8"/>
-  <source address="134.157.254.117"/>
   <forward/>
 </zone>'
 
