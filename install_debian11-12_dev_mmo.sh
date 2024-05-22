@@ -190,6 +190,7 @@ firewall_config='<?xml version="1.0" encoding="utf-8"?>
   <source address="10.11.7.239"/>
   <source address="134.157.23.239"/>
   <source address="134.157.254.8"/>
+  <source address="134.157.254.117"/> 
   <forward/>
 </zone>'
 
