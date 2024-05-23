@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ##########################################################################################
-#                                      PROD PUBLIQUE
+#                                        PROD
 # Ce script modifie les parametres suivants sur un serveur lors d'une installation DEBIAN 11 et DEBIAN 12 :
 #
 # - Hostname
@@ -23,7 +23,7 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 # Demande à l'utilisateur de saisir le nouveau nom de la machine
-echo "Quel est le nouveau nom complet de la machine ? (format = server1.prod.dsi.sorbonne-universite.fr)"
+echo "Quel est le nouveau nom complet de la machine ? (format = server1.dev.dsi.priv.sorbonne-universite.fr)"
 read new_hostname
 
 # Modification du nom d'hôte
@@ -34,7 +34,6 @@ sudo hostnamectl set-hostname "$new_hostname"
 sudo systemctl restart systemd-hostnamed
 
 echo "Le nom de la machine a été modifié avec succès en : $new_hostname"
-
 
 # Demander à l'utilisateur l'adresse IP, le masque de sous-réseau et la passerelle
 read -p "Entrez l'adresse IP : " ip_address
@@ -55,12 +54,12 @@ iface lo inet loopback
 # The primary network interface
 auto ens192
 iface ens192 inet static
-	address $ip_address
-	netmask $subnet_mask
-	gateway $gateway
-        # dns-* options are implemented by the resolvconf package, if installed
-        dns-nameservers 134.157.0.129 134.157.192.1
-        dns-search sorbonne-universite.fr dsi.sorbonne-universite.fr
+    address $ip_address
+    netmask $subnet_mask
+    gateway $gateway
+    # dns-* options are implemented by the resolvconf package, if installed
+    dns-nameservers 134.157.0.129 134.157.192.1
+    dns-search sorbonne-universite.fr dsi.sorbonne-universite.fr
 " > /etc/network/interfaces
 
 # Redémarrer le service réseau pour appliquer les modifications
@@ -192,13 +191,16 @@ firewall_config='<?xml version="1.0" encoding="utf-8"?>
   <source address="134.157.134.91"/>
   <source address="134.157.1.128/25"/>
   <source address="134.157.254.117"/>
-  <source address="134.157.23.239"/>
   <source address="134.157.254.8"/>
   <forward/>
 </zone>'
 
 echo "$firewall_config" > /etc/firewalld/zones/work.xml
 echo "Configuration de firewall ajoutée dans work.xml."
+
+# Redémarrer le service firewalld pour appliquer les modifications
+systemctl restart firewalld
+echo "Le service firewalld a été redémarré."
 
 # Ouvrir les ports web sur le pare-feu local
 firewall-cmd --zone=public --add-port=80/tcp --permanent
@@ -208,10 +210,6 @@ firewall-cmd --zone=work --add-port=80/tcp --permanent
 
 # Ouvrir le port EON (supervision)
 firewall-cmd --permanent --add-port=161/udp
-
-# Redémarrer le service firewalld pour appliquer les modifications
-systemctl restart firewalld
-echo "Le service firewalld a été redémarré."
 
 #Création du compte esiansible SU
 wget https://gitlab.dsi.sorbonne-universite.fr/cherigui/dsi-public/-/raw/main/mise_en_conformite_esiansible.sh
@@ -247,11 +245,13 @@ echo "Le serveur de temps a été configuré avec succès avec l'adresse IP de l
 
 # Update des paquets
 apt-get update && apt-get -y upgrade && apt autoremove -y && apt-get clean -y
+
 # Retirer X11 pour améliorer les performances et la sécurité
-apt-get purge x11-common libwayland-server0
+apt-get purge -y x11-common libwayland-server0
+
 # Installation des paquets utiles
 apt install -y inxi
-# Installation postfix (stoppé et desactivé)
+#Installation postfix (stoppé et desactivé)
 apt install -y postfix
 systemctl stop postfix
 systemctl disable postfix
@@ -262,7 +262,7 @@ apt install -y mailx
 apt install -y mailutils
 apt install -y sasl2-bin
 apt install -y rsyslog
-apt install -y openssh-clients
+apt install -y openssh-client
 apt install -y wget
 apt install -y htop
 apt install -y dstat
@@ -309,36 +309,39 @@ C_DEF="\[\033[0m\]"
 export PS1="${C_RED}\u@\h:${C_RED}\w${C_DEF} ${C_BLUE}#${C_DEF} "
 
 # Affichage des zones
-alias zones='firewall-cmd  --list-all-zones |egrep -A50 "external|dmz|home|public|work|internal|trusted" --group-separator="-------------"'
-alias zones1='firewall-cmd  --list-all-zones|less'
-alias services='systemctl list-unit-files --type=service --state=enabled'
+alias zones="firewall-cmd  --list-all-zones |egrep -A50 \"external|dmz|home|public|work|internal|trusted\" --group-separator=\"-------------\""
+alias zones1="firewall-cmd  --list-all-zones|less"
+alias services="systemctl list-unit-files --type=service --state=enabled"
 
-# You may uncomment the following lines if you want `ls' to be colorized:
-# export LS_OPTIONS='--color=auto'
+# You may uncomment the following lines if you want ls to be colorized:
+# export LS_OPTIONS="--color=auto"
 # eval "$(dircolors)"
- alias ls='ls $LS_OPTIONS'
- alias ll='ls $LS_OPTIONS -la'
- alias l='ls $LS_OPTIONS -lA'
- alias vi='/usr/bin/vim $*'
+alias ls="ls \$LS_OPTIONS"
+alias ll="ls \$LS_OPTIONS -la"
+alias l="ls \$LS_OPTIONS -lA"
+alias vi="/usr/bin/vim \$*"
 
 # Some more alias to avoid making mistakes:
- alias rm='rm -i'
- alias cp='cp -i'
- alias mv='mv -i'
+alias rm="rm -i"
+alias cp="cp -i"
+alias mv="mv -i"
 
-export PATH="/snap/bin/:$PATH"
+export PATH="/snap/bin/:\$PATH"
 '
 
 # Ajouter le contenu CONTENTBASHRCADD à la fin du fichier .bashrc
-echo "$CONTENTBASHRCADD" > /root/.bashrc"
+echo "$CONTENTBASHRCADD" >> /root/.bashrc
 echo "Contenu ajouté avec succès à /root/.bashrc."
 
+# Charger les modifications du .bashrc
 source /root/.bashrc
-
-#systemctl restart logrotate.service
 
 # Vérifier que tous les services critiques sont en cours d’exécution
 sudo systemctl list-units --type=service
+
+# Régénérer les clef SSH du host
+rm -f /etc/ssh/ssh_host_* && dpkg-reconfigure openssh-server && \
+/etc/init.d/ssh restart
 
 # Vidage du contenu des fichiers de journalisation système
 echo "" > /var/log/wtmp
