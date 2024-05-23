@@ -285,7 +285,7 @@ apt install -y ccze mc tmux rsync htop net-tools dnsutils
 # Default prompt en cas de problème :
 # export PS1='\[\033[01;31m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 
-CONTENTBASHRCADD="# ~/.bashrc: executed by bash(1) for non-login shells.
+CONTENTBASHRCADD='# ~/.bashrc: executed by bash(1) for non-login shells.
 
 # Note: PS1 and umask are already set in /etc/profile. You should not
 # need this unless you want different defaults for root.
@@ -327,11 +327,12 @@ alias services='systemctl list-unit-files --type=service --state=enabled'
  alias mv='mv -i'
 
 export PATH="/snap/bin/:$PATH"
-"
+'
 
 # Ajouter le contenu CONTENTBASHRCADD à la fin du fichier .bashrc
 echo "$CONTENTBASHRCADD" > /root/.bashrc"
 echo "Contenu ajouté avec succès à /root/.bashrc."
+
 source /root/.bashrc
 
 #systemctl restart logrotate.service
