@@ -208,7 +208,7 @@ firewall-cmd --zone=work --add-port=443/tcp --permanent
 firewall-cmd --zone=work --add-port=80/tcp --permanent
 
 # Ouvrir le port EON (supervision)
-firewall-cmd --permanent --add-port=161/udp
+firewall-cmd --permanent --zone=work --add-port=161/udp
 
 #Création du compte esiansible SU
 wget https://gitlab.dsi.sorbonne-universite.fr/cherigui/dsi-public/-/raw/main/mise_en_conformite_esiansible.sh
