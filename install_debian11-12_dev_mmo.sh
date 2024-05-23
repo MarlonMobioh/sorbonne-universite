@@ -284,7 +284,7 @@ apt install -y ccze mc tmux rsync htop net-tools dnsutils
 # Default prompt en cas de problème :
 # export PS1='\[\033[01;31m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 
-CONTENTBASHRCADD="# ~/.bashrc: executed by bash(1) for non-login shells.
+CONTENTBASHRCADD='# ~/.bashrc: executed by bash(1) for non-login shells.
 
 # Note: PS1 and umask are already set in /etc/profile. You should not
 # need this unless you want different defaults for root.
@@ -308,25 +308,25 @@ C_DEF="\[\033[0m\]"
 export PS1="${C_RED}\u@\h:${C_RED}\w${C_DEF} ${C_BLUE}#${C_DEF} "
 
 # Affichage des zones
-alias zones='firewall-cmd  --list-all-zones |egrep -A50 "external|dmz|home|public|work|internal|trusted" --group-separator="-------------"'
-alias zones1='firewall-cmd  --list-all-zones|less'
-alias services='systemctl list-unit-files --type=service --state=enabled'
+alias zones="firewall-cmd  --list-all-zones |egrep -A50 \"external|dmz|home|public|work|internal|trusted\" --group-separator=\"-------------\""
+alias zones1="firewall-cmd  --list-all-zones|less"
+alias services="systemctl list-unit-files --type=service --state=enabled"
 
-# You may uncomment the following lines if you want `ls' to be colorized:
-# export LS_OPTIONS='--color=auto'
+# You may uncomment the following lines if you want ls to be colorized:
+# export LS_OPTIONS="--color=auto"
 # eval "$(dircolors)"
- alias ls='ls $LS_OPTIONS'
- alias ll='ls $LS_OPTIONS -la'
- alias l='ls $LS_OPTIONS -lA'
- alias vi='/usr/bin/vim $*'
+alias ls="ls \$LS_OPTIONS"
+alias ll="ls \$LS_OPTIONS -la"
+alias l="ls \$LS_OPTIONS -lA"
+alias vi="/usr/bin/vim \$*"
 
 # Some more alias to avoid making mistakes:
- alias rm='rm -i'
- alias cp='cp -i'
- alias mv='mv -i'
+alias rm="rm -i"
+alias cp="cp -i"
+alias mv="mv -i"
 
-export PATH="/snap/bin/:$PATH"
-"
+export PATH="/snap/bin/:\$PATH"
+'
 
 # Ajouter le contenu CONTENTBASHRCADD à la fin du fichier .bashrc
 echo "$CONTENTBASHRCADD" > /root/.bashrc"
