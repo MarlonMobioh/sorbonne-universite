@@ -324,6 +324,7 @@ alias vi="/usr/bin/vim \$*"
 alias rm="rm -i"
 alias cp="cp -i"
 alias mv="mv -i"
+alias last="last -F"
 
 export PATH="/snap/bin/:\$PATH"
 '
