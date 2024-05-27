@@ -213,6 +213,7 @@ firewall_config='<?xml version="1.0" encoding="utf-8"?>
   <source address="134.157.134.0/24"/>
   <source address="134.157.142.0/24"/>
   <source address="134.157.143.0/24"/>
+  <source address="134.157.23.239"/>
   <source address="10.11.7.239"/>
   <source address="10.11.5.0/22"/>
   <source address="134.157.1.128/25"/>
