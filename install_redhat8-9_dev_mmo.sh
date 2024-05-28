@@ -67,24 +67,12 @@ machine_ip=$(hostname -I | awk '{print $1}')
 machine_hostname=$(hostname)
 
 # Vérifier que l'adresse IP et le nom d'hôte sont correctement définis dans /etc/hosts
-if grep -q "$machine_ip\s*$machine_hostname" /etc/hosts; then
-    echo "L'adresse IP et le nom d'hôte sont correctement définis dans /etc/hosts."
-else
+if ! grep -q "$machine_ip\s*$machine_hostname" /etc/hosts; then
     echo "L'adresse IP et/ou le nom d'hôte ne sont pas correctement définis dans /etc/hosts."
     echo "Ajout des entrées dans /etc/hosts..."
     echo "$machine_ip $machine_hostname" >> /etc/hosts
     echo "Les entrées ont été ajoutées à /etc/hosts."
 fi
-
-
-# Fonction pour vérifier l'appartenance d'un utilisateur au groupe wheel (équivalent de sudo)
-user_in_wheel_group() {
-    local username="$1"
-    grep -q "^wheel:.*:$username" /etc/group
-}
-
-# Ajouter une entrée dans /etc/hosts
-echo "$machine_ip $machine_hostname" >> /etc/hosts
 
 # Définition des utilisateurs dans un tableau avec leur mot de passe respectif
 user_passwords=(
@@ -96,7 +84,7 @@ user_passwords=(
     "fegard:@EoVqEL12378"
 )
 
-# Boucle pour créer les utilisateurs
+# Boucle pour créer les utilisateurs et configurer les fichiers .ssh/authorized_keys
 for user_info in "${user_passwords[@]}"; do
     # Extraire le nom d'utilisateur et le mot de passe du tableau
     username=$(echo "$user_info" | cut -d ":" -f 1)
@@ -110,43 +98,32 @@ for user_info in "${user_passwords[@]}"; do
         useradd -m -s /bin/bash "$username"
         echo "$username:$password" | chpasswd
 
-        # Vérifier si l'utilisateur est déjà dans le groupe wheel
+        # Ajouter l'utilisateur au groupe wheel s'il n'y est pas déjà
         if ! user_in_wheel_group "$username"; then
-            # Ajouter l'utilisateur au groupe wheel
             usermod -aG wheel "$username"
             echo "Utilisateur $username ajouté au groupe wheel."
         else
             echo "Utilisateur $username est déjà dans le groupe wheel. Ignorer l'ajout."
         fi
     fi
-done
 
-# Parcourir tous les répertoires utilisateur sous /home
-for user_home in /home/*; do
-    if [ -d "$user_home" ]; then
-        username=$(basename "$user_home")
+    # Vérifier et créer le dossier .ssh et le fichier authorized_keys
+    user_home="/home/$username"
+    authorized_keys_file="$user_home/.ssh/authorized_keys"
 
-        # Vérifier si l'utilisateur a un dossier .ssh dans son répertoire personnel
-        if [ -d "$user_home/.ssh" ]; then
-            authorized_keys_file="$user_home/.ssh/authorized_keys"
+    if [ ! -d "$user_home/.ssh" ]; then
+        mkdir -p "$user_home/.ssh"
+        chmod 700 "$user_home/.ssh"
+        chown "$username:$username" "$user_home/.ssh"
+    fi
 
-            # Vérifier si le fichier authorized_keys existe déjà
-            if [ -f "$authorized_keys_file" ]; then
-                echo "Le fichier $authorized_keys_file existe déjà pour l'utilisateur $username. Ignorer."
-
-        else
-            # Si le dossier .ssh n'existe pas, le créer
-            mkdir -p "$user_home/.ssh"
-            chmod 700 "$user_home/.ssh"
-            chown "$username:$username" "$user_home/.ssh"
-
-            # Créer un fichier authorized_keys vide
-            authorized_keys_file="$user_home/.ssh/authorized_keys"
-            touch "$authorized_keys_file"
-            chmod 600 "$authorized_keys_file"
-            chown "$username:$username" "$authorized_keys_file"
-            echo "Fichier $authorized_keys_file créé pour l'utilisateur $username."
-        fi
+    if [ ! -f "$authorized_keys_file" ]; then
+        touch "$authorized_keys_file"
+        chmod 600 "$authorized_keys_file"
+        chown "$username:$username" "$authorized_keys_file"
+        echo "Fichier $authorized_keys_file créé pour l'utilisateur $username."
+    else
+        echo "Le fichier $authorized_keys_file existe déjà pour l'utilisateur $username. Ignorer."
     fi
 done
 
