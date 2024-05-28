@@ -2,7 +2,7 @@
 
 ##########################################################################################
 #                                      DEV
-# Ce script modifie les paramètres suivants sur un serveur lors d'une installation RHEL 8 et RHEL 9.3 :
+# Ce script modifie les paramètres suivants sur un serveur lors d'une installation RHEL 9.3 :
 #
 # - Hostname
 # - Adressage IP [interface ens33]
