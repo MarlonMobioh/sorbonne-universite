@@ -5,7 +5,7 @@
 # Ce script modifie les paramètres suivants sur un serveur lors d'une installation RHEL 8 et RHEL 9.3 :
 #
 # - Hostname
-# - Adressage IP [interface ens192]
+# - Adressage IP [interface ens33]
 # - Création de l'ensemble des utilisateurs PEI ESI + esiansible
 # - Création des dossiers/fichiers authorized_keys des utilisateurs PEI ESI
 # - Configuration du fichier snmpd
