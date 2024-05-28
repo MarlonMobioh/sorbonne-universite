@@ -213,36 +213,44 @@ sudo systemctl restart systemd-timesyncd
 
 echo "Le serveur de temps a été configuré avec succès avec l'adresse IP de la passerelle : $gateway"
 
-# Installation de paquets et mise à jour
-dnf update -y
-dnf install -y inxi
-dnf install -y shellcheck
-dnf install -y postfix
+# Update des paquets
+apt-get update && apt-get -y upgrade && apt autoremove -y && apt-get clean -y
+
+# Retirer X11 pour améliorer les performances et la sécurité
+apt-get purge x11-common libwayland-server0
+
+# Installation des paquets utiles
+apt install -y inxi
+#Installation postfix (stoppé et desactivé)
+apt install -y postfix
 systemctl stop postfix
 systemctl disable postfix
-dnf install -y htop
-dnf install -y net-tools
-dnf install -y mailx
-dnf install -y mailutils
-dnf install -y sasl2-bin
-dnf install -y rsyslog
-dnf install -y openssh-clients
-dnf install -y wget
-dnf install -y dstat
-dnf install -y iotop 
-dnf install -y lnav
-dnf install -y mlocate
-dnf install -y man 
-dnf install -y mail 
-dnf install -y tree
-dnf install -y bind-utils 
-dnf install -y whois
-dnf install -y traceroute
-dnf install -y unzip
-dnf install -y telnet 
-dnf install -y rsync 
-dnf install -y lsof
-dnf install -y vim
+apt install -y shellcheck
+apt install -y net-tools
+apt install -y psmisc
+apt install -y mailx
+apt install -y mailutils
+apt install -y sasl2-bin
+apt install -y rsyslog
+apt install -y openssh-clients
+apt install -y wget
+apt install -y htop
+apt install -y dstat
+apt install -y iotop 
+apt install -y lnav
+apt install -y mlocate
+apt install -y man 
+apt install -y mail 
+apt install -y tree
+apt install -y bind-utils 
+apt install -y whois
+apt install -y traceroute
+apt install -y unzip
+apt install -y telnet 
+apt install -y lsof
+apt install -y vim
+apt install -y ccze mc tmux rsync htop net-tools dnsutils
+
 
 # Modification du /root/.bashrc
 cat <<EOF >> /root/.bashrc
