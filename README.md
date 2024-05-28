@@ -32,5 +32,5 @@ bash /tmp/install_redhat9_prod_mmo.sh
 
 # DEV REDHAT 9
 cd /tmp
-wgethttps://raw.githubusercontent.com/MarlonMobioh/SU/main/install_redhat9_dev_mmo.sh
-bash /tmp/install_redhat8-9_prod_mmo.sh
+wget https://raw.githubusercontent.com/MarlonMobioh/SU/main/install_redhat9_dev_mmo.sh
+bash /tmp/install_redhat9_dev_mmo.sh
