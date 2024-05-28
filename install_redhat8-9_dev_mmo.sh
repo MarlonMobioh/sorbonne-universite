@@ -23,8 +23,7 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 # Demande à l'utilisateur de saisir le nouveau nom de la machine
-echo "Quel est le nouveau nom complet de la machine ?"
-read new_hostname
+read -p "Quel est le nouveau nom complet de la machine ? " new_hostname
 
 # Modification du nom d'hôte
 hostnamectl set-hostname "$new_hostname"
@@ -35,7 +34,7 @@ read -p "Entrez l'adresse IP : " ip_address
 read -p "Entrez le masque de sous-réseau : " subnet_mask
 read -p "Entrez la passerelle par défaut : " gateway
 
-# Modifier le fichier /etc/sysconfig/network-scripts/ifcfg-ens33 avec les nouvelles valeurs
+# Modifier le fichier /etc/sysconfig/network-scripts/ifcfg-ens192 avec les nouvelles valeurs
 cat <<EOF > /etc/sysconfig/network-scripts/ifcfg-ens33
 TYPE=Ethernet
 BOOTPROTO=none
@@ -56,10 +55,10 @@ DNS2=134.157.192.1
 EOF
 
 # Redémarrer l'interface réseau pour appliquer les modifications
-systemctl restart NetworkManager
+nmcli connection reload
 
 echo "Adresse IP changée avec succès. Nouvelles valeurs :"
-ip addr show ens192 | grep -w inet
+ip addr show ens33 | grep -w inet
 
 # Déterminer l'adresse IP de la machine
 machine_ip=$(hostname -I | awk '{print $1}')
@@ -76,7 +75,7 @@ fi
 # Fonction pour vérifier l'appartenance d'un utilisateur au groupe wheel (équivalent de sudo)
 user_in_wheel_group() {
     local username="$1"
-    grep -q "^wheel:x:.*$username" /etc/group
+    grep -q "^wheel:.*:$username" /etc/group
 }
 
 # Ajouter une entrée dans /etc/hosts
@@ -117,7 +116,6 @@ for user_info in "${user_passwords[@]}"; do
     fi
 done
 
-
 # Parcourir tous les répertoires utilisateur sous /home
 for user_home in /home/*; do
     if [ -d "$user_home" ]; then
@@ -153,14 +151,12 @@ for user_home in /home/*; do
     fi
 done
 
-
-#Création du compte esiansible SU
+# Création du compte esiansible SU
 wget https://gitlab.dsi.sorbonne-universite.fr/cherigui/dsi-public/-/raw/main/mise_en_conformite_esiansible.sh
 bash mise_en_conformite_esiansible.sh
 
-
-# Récupérer l'adresse IP de l'interface ens192
-ip=$(ip -4 addr show dev ens192 | grep inet | awk '{print $2}' | cut -d'/' -f1)
+# Récupérer l'adresse IP de l'interface ens33
+ip=$(ip -4 addr show dev ens33 | grep inet | awk '{print $2}' | cut -d'/' -f1)
 echo "Adresse IP récupérée : $ip"
 
 # Mettre à jour le fichier de configuration SNMP
@@ -202,64 +198,50 @@ firewall_config='<?xml version="1.0" encoding="utf-8"?>
 echo "$firewall_config" > /etc/firewalld/zones/work.xml
 echo "Configuration de firewall ajoutée dans work.xml."
 
-# Ouvrir les ports web sur le pare-feu local
-firewall-cmd --zone=public --add-port=80/tcp --permanent
-firewall-cmd --zone=public --add-port=443/tcp --permanent
-firewall-cmd --zone=work --add-port=443/tcp --permanent
-firewall-cmd --zone=work --add-port=80/tcp --permanent
-
-# Ouvrir le port EON (supervision)
-firewall-cmd --permanent --add-port=161/udp
-
-# Redémarrer le service firewalld pour appliquer les modifications
-systemctl restart firewalld
-echo "Le service firewalld a été redémarré."
-
 # Modifier le fichier /etc/systemd/timesyncd.conf avec l'adresse IP de la passerelle
-sudo sed -i "s/^NTP=.*/NTP=$gateway/" /etc/systemd/timesyncd.conf
+sed -i "s/^NTP=.*/NTP=$gateway/" /etc/systemd/timesyncd.conf
 
 # Redémarrer le service systemd-timesyncd pour appliquer les modifications
-sudo systemctl restart systemd-timesyncd
+systemctl restart systemd-timesyncd
 
 echo "Le serveur de temps a été configuré avec succès avec l'adresse IP de la passerelle : $gateway"
 
-# Update des paquets
-yum update && yum -y upgrade && yum autoremove -y && yum clean -y
+# Mise à jour des paquets
+dnf update -y && dnf upgrade -y && dnf autoremove -y && dnf clean all -y
 
 # Retirer X11 pour améliorer les performances et la sécurité
-yum purge x11-common libwayland-server0
+dnf remove -y x11-common libwayland-server0
 
 # Installation des paquets utiles
-yum install -y inxi
-#Installation postfix (stoppé et desactivé)
-yum install -y postfix
+dnf install -y inxi
+# Installation postfix (stoppé et désactivé)
+dnf install -y postfix
 systemctl stop postfix
 systemctl disable postfix
-yum install -y shellcheck
-yum install -y net-tools
-yum install -y psmisc
-yum install -y mailx
-yum install -y mailutils
-yum install -y sasl2-bin
-yum install -y rsyslog
-yum install -y openssh-clients
-yum install -y wget
-yum install -y htop
-yum install -y dstat
-yum install -y iotop 
-yum install -y lnav
-yum install -y mlocate
-yum install -y man 
-yum install -y mail 
-yum install -y tree
-yum install -y bind-utils 
-yum install -y whois
-yum install -y traceroute
-yum install -y unzip
-yum install -y telnet 
-yum install -y lsof
-yum install -y vim
-yum install -y ccze mc tmux rsync htop net-tools dnsutils
+dnf install -y shellcheck
+dnf install -y net-tools
+dnf install -y psmisc
+dnf install -y mailx
+dnf install -y mailutils
+dnf install -y cyrus-sasl
+dnf install -y rsyslog
+dnf install -y openssh-clients
+dnf install -y wget
+dnf install -y htop
+dnf install -y dstat
+dnf install -y iotop 
+dnf install -y lnav
+dnf install -y mlocate
+dnf install -y man 
+dnf install -y tree
+dnf install -y bind-utils 
+dnf install -y whois
+dnf install -y traceroute
+dnf install -y unzip
+dnf install -y telnet 
+dnf install -y lsof
+dnf install -y vim
+dnf install -y ccze mc tmux rsync
 
 # Modification du /root/.bashrc
 cat <<EOF >> /root/.bashrc
@@ -303,22 +285,22 @@ EOF
 
 echo "Contenu ajouté avec succès à /root/.bashrc."
 
-#Sourcer .bashrc
-source ~/.bashrc
+# Sourcer .bashrc
+source /root/.bashrc
 
 # Vérifier que tous les services critiques sont en cours d’exécution
 systemctl list-units --type=service
 
-#Enregistrement dans RedHat (mmobioh ; Sorbonne@2023)
+# Enregistrement dans RedHat (mmobioh ; Sorbonne@2023)
 echo "Enregistrement dans RedHat :"
 subscription-manager clean
-subscription-manager register
+subscription-manager register --username=mmobioh --password=Sorbonne@2023
 subscription-manager list --available
 subscription-manager attach --pool=8a85f99977b0c0420177f2a086211111
 
 # Vidage du contenu des fichiers de journalisation système
-echo "" > /var/log/wtmp
-echo "" > /var/log/lastlog
+> /var/log/wtmp
+> /var/log/lastlog
 
 # Suppression history
 history -c
