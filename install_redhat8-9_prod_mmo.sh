@@ -214,42 +214,42 @@ sudo systemctl restart systemd-timesyncd
 echo "Le serveur de temps a été configuré avec succès avec l'adresse IP de la passerelle : $gateway"
 
 # Update des paquets
-apt-get update && apt-get -y upgrade && apt autoremove -y && apt-get clean -y
+yum update && yum -y upgrade && yum autoremove -y && yum clean -y
 
 # Retirer X11 pour améliorer les performances et la sécurité
-apt-get purge x11-common libwayland-server0
+yum purge x11-common libwayland-server0
 
 # Installation des paquets utiles
-apt install -y inxi
+yum install -y inxi
 #Installation postfix (stoppé et desactivé)
-apt install -y postfix
+yum install -y postfix
 systemctl stop postfix
 systemctl disable postfix
-apt install -y shellcheck
-apt install -y net-tools
-apt install -y psmisc
-apt install -y mailx
-apt install -y mailutils
-apt install -y sasl2-bin
-apt install -y rsyslog
-apt install -y openssh-clients
-apt install -y wget
-apt install -y htop
-apt install -y dstat
-apt install -y iotop 
-apt install -y lnav
-apt install -y mlocate
-apt install -y man 
-apt install -y mail 
-apt install -y tree
-apt install -y bind-utils 
-apt install -y whois
-apt install -y traceroute
-apt install -y unzip
-apt install -y telnet 
-apt install -y lsof
-apt install -y vim
-apt install -y ccze mc tmux rsync htop net-tools dnsutils
+yum install -y shellcheck
+yum install -y net-tools
+yum install -y psmisc
+yum install -y mailx
+yum install -y mailutils
+yum install -y sasl2-bin
+yum install -y rsyslog
+yum install -y openssh-clients
+yum install -y wget
+yum install -y htop
+yum install -y dstat
+yum install -y iotop 
+yum install -y lnav
+yum install -y mlocate
+yum install -y man 
+yum install -y mail 
+yum install -y tree
+yum install -y bind-utils 
+yum install -y whois
+yum install -y traceroute
+yum install -y unzip
+yum install -y telnet 
+yum install -y lsof
+yum install -y vim
+yum install -y ccze mc tmux rsync htop net-tools dnsutils
 
 
 # Modification du /root/.bashrc
