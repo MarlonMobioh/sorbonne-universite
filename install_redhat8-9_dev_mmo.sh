@@ -128,13 +128,7 @@ for user_home in /home/*; do
             # Vérifier si le fichier authorized_keys existe déjà
             if [ -f "$authorized_keys_file" ]; then
                 echo "Le fichier $authorized_keys_file existe déjà pour l'utilisateur $username. Ignorer."
-            else
-                # Créer un fichier authorized_keys vide
-                touch "$authorized_keys_file"
-                chmod 600 "$authorized_keys_file"
-                chown "$username:$username" "$authorized_keys_file"
-                echo "Fichier $authorized_keys_file créé pour l'utilisateur $username."
-            fi
+
         else
             # Si le dossier .ssh n'existe pas, le créer
             mkdir -p "$user_home/.ssh"
