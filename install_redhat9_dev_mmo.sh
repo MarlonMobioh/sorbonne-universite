@@ -174,13 +174,24 @@ firewall_config='<?xml version="1.0" encoding="utf-8"?>
 echo "$firewall_config" > /etc/firewalld/zones/work.xml
 echo "Configuration de firewall ajoutée dans work.xml."
 
-# Modifier le fichier /etc/systemd/timesyncd.conf avec l'adresse IP de la passerelle
-sed -i "s/^NTP=.*/NTP=$gateway/" /etc/systemd/timesyncd.conf
+# Configuration de chronyd
+# Sauvegarder le fichier de configuration original de chrony
+cp /etc/chrony.conf /etc/chrony.conf.old
 
-# Redémarrer le service systemd-timesyncd pour appliquer les modifications
-systemctl restart systemd-timesyncd
+# Modifier /etc/chrony.conf pour utiliser la passerelle comme serveur NTP
+sed -i "s/^pool /#pool /" /etc/chrony.conf
+echo "server $gateway iburst" >> /etc/chrony.conf
 
-echo "Le serveur de temps a été configuré avec succès avec l'adresse IP de la passerelle : $gateway"
+# Redémarrer le service chronyd pour appliquer les modifications
+systemctl restart chronyd
+
+# Vérifier le statut du service chronyd
+systemctl status chronyd
+
+# Vérifier la synchronisation de l'horloge
+timedatectl
+
+echo "Configuration de chronyd avec l'adresse IP de la passerelle : $gateway effectuée."
 
 # Mise à jour des paquets
 dnf update -y && dnf upgrade -y && dnf autoremove -y && dnf clean all -y
