@@ -233,10 +233,13 @@ echo "Abonnement Redhat 8a85f99977b0c0420177f2a086211111 attaché"
 sleep 3
 
 # Mise à jour des paquets
-dnf update -y && dnf upgrade -y && dnf autoremove -y && dnf clean all -y
+dnf update -y
+dnf upgrade -y
+dnf autoremove -y
+dnf clean all -y
 
 # Retirer X11 pour améliorer les performances et la sécurité
-dnf remove -y x11-common libwayland-server0
+#dnf remove -y x11-common libwayland-server0
 
 # Installation des paquets utiles
 dnf install -y inxi
