@@ -255,7 +255,7 @@ dnf install -y vim
 dnf install -y ccze mc tmux rsync
 
 # Modification du /root/.bashrc
-cat <<EOF >> /root/.bashrc
+cat <<'EOF' >> /root/.bashrc
 # ------------------------
 # Configuration du prompt
 # ------------------------
