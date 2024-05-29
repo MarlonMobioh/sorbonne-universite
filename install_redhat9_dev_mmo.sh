@@ -217,8 +217,20 @@ sleep 6
 # Vérifier la synchronisation de l'horloge
 timedatectl
 sleep 3
+echo "Configuration de chronyd avec l'adresse IP de la passerelle 134.157.254.19 (ntp1.jussieu.fr) effectuée."
 
-echo "Configuration de chronyd avec l'adresse IP de la passerelle : $gateway effectuée."
+# Enregistrement dans RedHat (mmobioh ; Sorbonne@2023)
+echo "Enregistrement dans RedHat :"
+echo "Nettoyage des informations d'inscription précédentes"
+subscription-manager clean
+echo "Enregistrement de l'utilisateur [mmobioh]"
+subscription-manager register --username=mmobioh --password=Sorbonne@2023
+echo "Affichage de la liste des abonnements disponibles"
+subscription-manager list --available
+echo "Attachement de l'abonnement spécifique identifié par le code de pool 8a85f99977b0c0420177f2a086211111s"
+subscription-manager attach --pool=8a85f99977b0c0420177f2a086211111
+echo "Abonnement Redhat 8a85f99977b0c0420177f2a086211111 attaché"
+sleep 3
 
 # Mise à jour des paquets
 dnf update -y && dnf upgrade -y && dnf autoremove -y && dnf clean all -y
@@ -304,18 +316,6 @@ source /root/.bashrc
 
 # Vérifier que tous les services critiques sont en cours d’exécution
 systemctl list-units --type=service
-
-# Enregistrement dans RedHat (mmobioh ; Sorbonne@2023)
-echo "Enregistrement dans RedHat :"
-echo "Nettoyage des informations d'inscription précédentes"
-subscription-manager clean
-echo "Enregistrement de l'utilisateur [mmobioh]"
-subscription-manager register --username=mmobioh --password=Sorbonne@2023
-echo "Affichage de la liste des abonnements disponibles"
-subscription-manager list --available
-echo "Attachement de l'abonnement spécifique identifié par le code de pool [8a85f99977b0c0420177f2a086211111s]"
-subscription-manager attach --pool=8a85f99977b0c0420177f2a086211111
-sleep 3
 
 # Vidage du contenu des fichiers de journalisation système
 > /var/log/wtmp
