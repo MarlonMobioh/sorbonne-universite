@@ -202,7 +202,7 @@ cp /etc/chrony.conf /etc/chrony.conf.old
 
 # Modifier /etc/chrony.conf pour utiliser la passerelle comme serveur NTP
 sed -i "s/^pool /#pool /" /etc/chrony.conf
-echo "server $gateway iburst" >> /etc/chrony.conf
+echo "server 134.157.254.19 iburst" >> /etc/chrony.conf
 
 # Redémarrer le service chronyd pour appliquer les modifications
 systemctl restart chronyd
