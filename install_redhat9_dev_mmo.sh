@@ -189,11 +189,13 @@ firewall-cmd --zone=work --add-port=443/tcp --permanent
 firewall-cmd --zone=work --add-port=80/tcp --permanent
 
 # Ouvrir le port EON (supervision)
-firewall-cmd --permanent --add-port=161/udp
+firewall-cmd --zone=work --add-port=161/udp --permanent
 
 # Redémarrer le service firewalld pour appliquer les modifications
+firewall-cmd --reload
 systemctl restart firewalld
 echo "Le service firewalld a été redémarré."
+sleep 3
 
 # Configuration de chronyd
 # Sauvegarder le fichier de configuration original de chrony
@@ -214,6 +216,7 @@ sleep 6
 
 # Vérifier la synchronisation de l'horloge
 timedatectl
+sleep 3
 
 echo "Configuration de chronyd avec l'adresse IP de la passerelle : $gateway effectuée."
 
@@ -312,6 +315,7 @@ echo "Affichage de la liste des abonnements disponibles"
 subscription-manager list --available
 echo "Attachement de l'abonnement spécifique identifié par le code de pool [8a85f99977b0c0420177f2a086211111s]"
 subscription-manager attach --pool=8a85f99977b0c0420177f2a086211111
+sleep 3
 
 # Vidage du contenu des fichiers de journalisation système
 > /var/log/wtmp
@@ -322,7 +326,7 @@ history -c
 
 # Message de fin de script
 echo "********** Fin du script **********"
-sleep 3
-echo "********** Redémarrage du serveur **********"
+sleep 2
+echo "********** Redémarrage du serveur ... **********"
 sleep 3
 reboot
