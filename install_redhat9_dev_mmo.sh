@@ -282,8 +282,8 @@ C_DEF="\[\033[0m\]"
 export PS1="${C_RED}\u@\h:${C_RED}\w${C_DEF} ${C_BLUE}#${C_DEF} "
 
 # Affichage des zones
-alias zones="firewall-cmd  --list-all-zones |egrep -A50 \"external|dmz|home|public|work|internal|trusted\" --group-separator=\"-------------\""
-alias zones1="firewall-cmd  --list-all-zones|less"
+alias zones="firewall-cmd --list-all-zones | egrep -A50 \"external|dmz|home|public|work|internal|trusted\" --group-separator=\"-------------\""
+alias zones1="firewall-cmd --list-all-zones | less"
 alias services="systemctl list-unit-files --type=service --state=enabled"
 
 # You may uncomment the following lines if you want ls to be colorized:
@@ -294,18 +294,19 @@ alias ll="ls \$LS_OPTIONS -la"
 alias l="ls \$LS_OPTIONS -lA"
 alias vi="/usr/bin/vim \$*"
 
-# Some more alias to avoid making mistakes:
+# Some more aliases to avoid making mistakes:
 alias rm="rm -i"
 alias cp="cp -i"
 alias mv="mv -i"
 alias last="last -F"
 
-export PATH="/snap/bin/:\$PATH"
+# Ajout de /snap/bin au PATH existant
+export PATH="/snap/bin:$PATH"
 EOF
 
 echo "Contenu ajouté avec succès à /root/.bashrc."
 
-# Sourcer .bashrc
+# Sourcer .bashrc pour appliquer les modifications au shell actuel
 source /root/.bashrc
 
 # Vérifier que tous les services critiques sont en cours d’exécution
