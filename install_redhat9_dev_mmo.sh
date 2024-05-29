@@ -250,26 +250,17 @@ systemctl disable postfix
 dnf install -y shellcheck
 dnf install -y net-tools
 dnf install -y psmisc
-dnf install -y mailx
-dnf install -y mailutils
+dnf install -y mailx mailutils
 dnf install -y cyrus-sasl
 dnf install -y rsyslog
 dnf install -y openssh-clients
-dnf install -y wget
-dnf install -y htop
 dnf install -y dstat
 dnf install -y iotop 
 dnf install -y lnav
 dnf install -y mlocate
-dnf install -y man 
-dnf install -y tree
 dnf install -y bind-utils 
-dnf install -y whois
 dnf install -y traceroute
-dnf install -y unzip
-dnf install -y telnet 
-dnf install -y lsof
-dnf install -y vim
+dnf install -y lsof htop telnet unzip whois vim wget man tree
 dnf install -y ccze mc tmux rsync
 
 # Modification du /root/.bashrc
