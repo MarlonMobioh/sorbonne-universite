@@ -152,6 +152,8 @@ sed -i 's/syscontact Root <root@localhost> (configure \/etc\/snmp\/snmp.local.co
 
 # Redémarrer le service SNMP
 systemctl restart snmpd
+echo "*** Le service snmpd a été redémarré.***"
+sleep 3
 
 # Afficher le statut du service SNMP
 systemctl status snmpd
@@ -194,7 +196,7 @@ firewall-cmd --zone=work --add-port=161/udp --permanent
 # Redémarrer le service firewalld pour appliquer les modifications
 firewall-cmd --reload
 systemctl restart firewalld
-echo "Le service firewalld a été redémarré."
+echo "*** Le service firewalld a été redémarré.***"
 sleep 3
 
 # Configuration de chronyd
@@ -210,9 +212,9 @@ systemctl restart chronyd
 
 # Vérifier le statut du service chronyd
 systemctl status chronyd
-# Pause de 6 secondes
+echo "*** Le service chronyd a été redémarré.***"
 echo "*** Waiting 5 sec ... ***"
-sleep 6
+sleep 5
 
 # Vérifier la synchronisation de l'horloge
 timedatectl
@@ -229,7 +231,7 @@ echo "Affichage de la liste des abonnements disponibles"
 subscription-manager list --available
 echo "Attachement de l'abonnement spécifique identifié par le code de pool 8a85f99977b0c0420177f2a086211111s"
 subscription-manager attach --pool=8a85f99977b0c0420177f2a086211111
-echo "Abonnement Redhat 8a85f99977b0c0420177f2a086211111 attaché"
+echo "*** Abonnement Redhat 8a85f99977b0c0420177f2a086211111 attaché ***"
 sleep 3
 
 # Mise à jour des paquets
@@ -322,6 +324,8 @@ history -c
 # Message de fin de script
 echo "********** Fin du script **********"
 sleep 2
+echo "************************************************"
 echo "********** Redémarrage du serveur ... **********"
+echo "************************************************"
 sleep 3
 reboot
