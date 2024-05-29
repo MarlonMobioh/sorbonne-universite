@@ -1,5 +1,10 @@
 Pour lancer le script :
 
+# ADD AUTHORIZED_KEYS FILE
+cd /tmp
+wget https://raw.githubusercontent.com/MarlonMobioh/SU/main/add_authorized_key_file.sh
+bash add_authorized_key_file.sh
+
 # DEV DEBIAN 11-12
 cd /tmp
 wget https://raw.githubusercontent.com/MarlonMobioh/SU/main/install_debian11-12_dev_mmo.sh
