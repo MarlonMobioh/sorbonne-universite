@@ -136,12 +136,12 @@ wget https://gitlab.dsi.sorbonne-universite.fr/cherigui/dsi-public/-/raw/main/mi
 bash mise_en_conformite_esiansible.sh
 
 # Récupérer l'adresse IP de l'interface ens33
-#ip=$(ip -4 addr show dev ens33 | grep inet | awk '{print $2}' | cut -d'/' -f1)
-#echo "Adresse IP récupérée : $ip"
+ip=$(ip -4 addr show dev ens33 | grep inet | awk '{print $2}' | cut -d'/' -f1)
+echo "Adresse IP récupérée : $ip"
 
-# cp /etc/snmp/snmpd.conf /etc/snmp/snmpd.conf.old
+cp /etc/snmp/snmpd.conf /etc/snmp/snmpd.conf.old
 # Mettre à jour le fichier de configuration SNMP
-#sed -i -e 's/^#\(com2sec notConfigUser  default       public\)/com2sec notConfigUser  '$ip'       public/' \
+sed -i -e 's/^#\(com2sec notConfigUser  default       public\)/com2sec notConfigUser  '$ip'       public/' \
 #       -e 's/^#\(group   notConfigGroup v1           notConfigUser\)/\1/' \
 #       -e 's/^#\(group   notConfigGroup v2c           notConfigUser\)/\1/' \
 #       -e 's/^#\(view    systemview    included   .1.3.6.1.2.1.1\)/\1/' \
@@ -156,12 +156,12 @@ bash mise_en_conformite_esiansible.sh
 #sed -i 's/syscontact Root <root@localhost> (configure \/etc\/snmp\/snmp.local.conf)/syscontact "Admin <admin@example.com>"/' /etc/snmp/snmpd.conf
 
 # Redémarrer le service SNMP
-#systemctl restart snmpd
-#echo "*** Le service snmpd a été redémarré.***"
-#sleep 3
+systemctl restart snmpd
+echo "*** Le service snmpd a été redémarré.***"
+sleep 3
 
 # Afficher le statut du service SNMP
-#systemctl status snmpd
+systemctl status snmpd
 
 # Ajouter la configuration de firewall (DEV)
 firewall_config='<?xml version="1.0" encoding="utf-8"?>
