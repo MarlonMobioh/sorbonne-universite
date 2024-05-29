@@ -196,6 +196,8 @@ systemctl restart chronyd
 
 # Vérifier le statut du service chronyd
 systemctl status chronyd
+# Pause de 6 secondes
+sleep 6
 
 # Vérifier la synchronisation de l'horloge
 timedatectl
