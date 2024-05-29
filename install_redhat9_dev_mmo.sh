@@ -321,6 +321,8 @@ subscription-manager attach --pool=8a85f99977b0c0420177f2a086211111
 history -c
 
 # Message de fin de script
-echo "Fin du script."
-
+echo "********** Fin du script **********"
+sleep 3
+echo "********** Redémarrage du serveur **********"
+sleep 3
 reboot
