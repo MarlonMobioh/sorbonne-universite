@@ -34,7 +34,7 @@ read -p "Entrez l'adresse IP : " ip_address
 read -p "Entrez le masque de sous-réseau : " subnet_mask
 read -p "Entrez la passerelle par défaut : " gateway
 
-# Modifier le fichier /etc/sysconfig/network-scripts/ifcfg-ens192 avec les nouvelles valeurs
+# Modifier le fichier /etc/sysconfig/network-scripts/ifcfg-ens33 avec les nouvelles valeurs
 cat <<EOF > /etc/sysconfig/network-scripts/ifcfg-ens33
 TYPE=Ethernet
 BOOTPROTO=none
@@ -156,7 +156,6 @@ systemctl restart snmpd
 # Afficher le statut du service SNMP
 systemctl status snmpd
 
-
 # Ajouter la configuration de firewall (DEV)
 firewall_config='<?xml version="1.0" encoding="utf-8"?>
 <zone>
@@ -210,6 +209,7 @@ systemctl restart chronyd
 # Vérifier le statut du service chronyd
 systemctl status chronyd
 # Pause de 6 secondes
+echo "*** Waiting 5 sec ... ***"
 sleep 6
 
 # Vérifier la synchronisation de l'horloge
@@ -255,7 +255,7 @@ dnf install -y vim
 dnf install -y ccze mc tmux rsync
 
 # Modification du /root/.bashrc
-cat <<'EOF' >> /root/.bashrc
+cat <<'EOF' > /root/.bashrc
 # ------------------------
 # Configuration du prompt
 # ------------------------
