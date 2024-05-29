@@ -6,22 +6,37 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 
-# Vérifier et créer le dossier .ssh et le fichier authorized_keys
-    user_home="/home/$username"
-    authorized_keys_file="$user_home/.ssh/authorized_keys"
+# Parcourir tous les répertoires utilisateur sous /home
+for user_home in /home/*; do
+    if [ -d "$user_home" ]; then
+        username=$(basename "$user_home")
 
-    if [ ! -d "$user_home/.ssh" ]; then
-        mkdir -p "$user_home/.ssh"
-        chmod 700 "$user_home/.ssh"
-        chown "$username:$username" "$user_home/.ssh"
-    fi
+        # Vérifier si l'utilisateur a un dossier .ssh dans son répertoire personnel
+        if [ -d "$user_home/.ssh" ]; then
+            authorized_keys_file="$user_home/.ssh/authorized_keys"
 
-    if [ ! -f "$authorized_keys_file" ]; then
-        touch "$authorized_keys_file"
-        chmod 600 "$authorized_keys_file"
-        chown "$username:$username" "$authorized_keys_file"
-        echo "Fichier $authorized_keys_file créé pour l'utilisateur $username."
-    else
-        echo "Le fichier $authorized_keys_file existe déjà pour l'utilisateur $username. Ignorer."
+            # Vérifier si le fichier authorized_keys existe déjà
+            if [ -f "$authorized_keys_file" ]; then
+                echo "Le fichier $authorized_keys_file existe déjà pour l'utilisateur $username. Ignorer."
+            else
+                # Créer un fichier authorized_keys vide
+                touch "$authorized_keys_file"
+                chmod 600 "$authorized_keys_file"
+                chown "$username:$username" "$authorized_keys_file"
+                echo "Fichier $authorized_keys_file créé pour l'utilisateur $username."
+            fi
+        else
+            # Si le dossier .ssh n'existe pas, le créer
+            mkdir -p "$user_home/.ssh"
+            chmod 700 "$user_home/.ssh"
+            chown "$username:$username" "$user_home/.ssh"
+
+            # Créer un fichier authorized_keys vide
+            authorized_keys_file="$user_home/.ssh/authorized_keys"
+            touch "$authorized_keys_file"
+            chmod 600 "$authorized_keys_file"
+            chown "$username:$username" "$authorized_keys_file"
+            echo "Fichier $authorized_keys_file créé pour l'utilisateur $username."
+        fi
     fi
 done
