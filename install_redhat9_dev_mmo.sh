@@ -136,24 +136,28 @@ wget https://gitlab.dsi.sorbonne-universite.fr/cherigui/dsi-public/-/raw/main/mi
 bash mise_en_conformite_esiansible.sh
 
 # Installation des paquets necessaires SNMP
-dnf install -y net-snmp net-snmp-utils
+dnf install -y net-snmp net-snmp-libs net-snmp-utils
 
 # Récupérer l'adresse IP de l'interface ens33
 ip=$(ip -4 addr show dev ens33 | grep inet | awk '{print $2}' | cut -d'/' -f1)
-echo "Adresse IP récupérée : $ip"
+echo "Adresse IP récupérée pour la configuration /etc/snmp/snmpd.conf : $ip"
 
 # Copie du fichier de configuration SNMP avant modification
 cp /etc/snmp/snmpd.conf /etc/snmp/snmpd.conf.old
+
 # Mettre à jour le fichier de configuration SNMP
-sed -i -e 's/^#\(com2sec notConfigUser  default       public\)/com2sec notConfigUser  '$ip'       public/' \
-       -e 's/^#\(group   notConfigGroup v1           notConfigUser\)/\1/' \
-       -e 's/^#\(group   notConfigGroup v2c           notConfigUser\)/\1/' \
-       -e 's/^#\(view    systemview    included   .1.3.6.1.2.1.1\)/\1/' \
-       -e 's/^#\(view    systemview    included   .1.3.6.1.2.1.25.1.1\)/\1/' \
-       -e 's/^#\(access  notConfigGroup ""      any       noauth    exact  systemview none none\)/\1/' \
-       -e 's/^#\(syslocation Unknown (edit \/etc\/snmp\/snmpd.conf)\)/\1/' \
-       -e 's/^#\(syscontact Root <root@localhost> (configure \/etc\/snmp\/snmp.local.conf)\)/\1/' \
-       /etc/snmp/snmpd.conf
+sed -i '/^com2sec notConfigUser  default       public$/a\\ncom2sec notConfigUser  '$ip'       Sorbonne_Universite' /etc/snmp/snmpd.conf
+
+# Mettre à jour le fichier de configuration SNMP
+#sed -i -e 's/^#\(com2sec notConfigUser  default       public\)/com2sec notConfigUser  '$ip'       public/' \
+#       -e 's/^#\(group   notConfigGroup v1           notConfigUser\)/\1/' \
+#       -e 's/^#\(group   notConfigGroup v2c           notConfigUser\)/\1/' \
+#       -e 's/^#\(view    systemview    included   .1.3.6.1.2.1.1\)/\1/' \
+#       -e 's/^#\(view    systemview    included   .1.3.6.1.2.1.25.1.1\)/\1/' \
+#       -e 's/^#\(access  notConfigGroup ""      any       noauth    exact  systemview none none\)/\1/' \
+#       -e 's/^#\(syslocation Unknown (edit \/etc\/snmp\/snmpd.conf)\)/\1/' \
+#       -e 's/^#\(syscontact Root <root@localhost> (configure \/etc\/snmp\/snmp.local.conf)\)/\1/' \
+#       /etc/snmp/snmpd.conf
 
 # Redémarrer le service SNMP
 systemctl restart snmpd
@@ -162,6 +166,11 @@ sleep 3
 
 # Afficher le statut du service SNMP
 systemctl status snmpd
+sleep 3
+
+# Test de communication SNMP
+snmpwalk -v1 127.0.0.1 -c Sorbonne_Universite
+sleep 3
 
 # Ajouter la configuration de firewall (DEV)
 firewall_config='<?xml version="1.0" encoding="utf-8"?>
