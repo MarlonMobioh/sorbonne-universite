@@ -135,6 +135,9 @@ done
 wget https://gitlab.dsi.sorbonne-universite.fr/cherigui/dsi-public/-/raw/main/mise_en_conformite_esiansible.sh
 bash mise_en_conformite_esiansible.sh
 
+# Installation des paquets necessaires SNMP
+dnf install -y net-snmp net-snmp-utils
+
 # Récupérer l'adresse IP de l'interface ens33
 ip=$(ip -4 addr show dev ens33 | grep inet | awk '{print $2}' | cut -d'/' -f1)
 echo "Adresse IP récupérée : $ip"
@@ -264,7 +267,7 @@ dnf install -y lnav
 dnf install -y mlocate
 dnf install -y bind-utils 
 dnf install -y traceroute
-dnf install -y lsof htop telnet unzip whois vim wget man tree net-snmp net-snmp-utils
+dnf install -y lsof htop telnet unzip whois vim wget man tree
 dnf install -y ccze mc tmux rsync
 
 # Modification du /root/.bashrc
