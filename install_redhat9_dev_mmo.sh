@@ -277,7 +277,7 @@ dnf install -y lnav
 dnf install -y mlocate
 dnf install -y bind-utils 
 dnf install -y traceroute
-dnf install -y lsof htop telnet unzip whois vim wget man tree
+dnf install -y lsof htop telnet unzip whois vim wget man tree gcc
 dnf install -y ccze mc tmux rsync
 
 # Modification du /root/.bashrc
