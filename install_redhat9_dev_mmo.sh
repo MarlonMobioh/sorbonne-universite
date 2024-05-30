@@ -152,10 +152,6 @@ sed -i -e 's/^#\(com2sec notConfigUser  default       public\)/com2sec notConfig
        -e 's/^#\(syscontact Root <root@localhost> (configure \/etc\/snmp\/snmp.local.conf)\)/\1/' \
        /etc/snmp/snmpd.conf
 
-# Ajouter ou modifier les valeurs pour syslocation et syscontact
-sed -i 's/syslocation Unknown (edit \/etc\/snmp\/snmpd.conf)/syslocation "MyLocation"/' /etc/snmp/snmpd.conf
-sed -i 's/syscontact Root <root@localhost> (configure \/etc\/snmp\/snmp.local.conf)/syscontact "Admin <admin@example.com>"/' /etc/snmp/snmpd.conf
-
 # Redémarrer le service SNMP
 systemctl restart snmpd
 echo "*** Le service snmpd a été redémarré.***"
@@ -268,7 +264,7 @@ dnf install -y lnav
 dnf install -y mlocate
 dnf install -y bind-utils 
 dnf install -y traceroute
-dnf install -y lsof htop telnet unzip whois vim wget man tree
+dnf install -y lsof htop telnet unzip whois vim wget man tree net-snmp net-snmp-utils
 dnf install -y ccze mc tmux rsync
 
 # Modification du /root/.bashrc
