@@ -137,6 +137,7 @@ bash mise_en_conformite_esiansible.sh
 
 # Installation des paquets necessaires SNMP
 dnf install -y net-snmp net-snmp-libs net-snmp-utils
+dnf update -y net-snmp net-snmp-libs net-snmp-utils
 
 # Récupérer l'adresse IP de l'interface ens33
 ip=$(ip -4 addr show dev ens33 | grep inet | awk '{print $2}' | cut -d'/' -f1)
@@ -146,7 +147,7 @@ echo "Adresse IP récupérée pour la configuration /etc/snmp/snmpd.conf : $ip"
 cp /etc/snmp/snmpd.conf /etc/snmp/snmpd.conf.old
 
 # Mettre à jour le fichier de configuration SNMP
-sed -i '/^com2sec notConfigUser  default       public$/a\\ncom2sec notConfigUser  '$ip'       Sorbonne_Universite' /etc/snmp/snmpd.conf
+sed -i "s/com2sec *notConfigUser *default *public/com2sec notConfigUser    $ip public/" /etc/snmp/snmpd.conf
 
 # Mettre à jour le fichier de configuration SNMP
 #sed -i -e 's/^#\(com2sec notConfigUser  default       public\)/com2sec notConfigUser  '$ip'       public/' \
@@ -169,7 +170,7 @@ systemctl status snmpd
 sleep 3
 
 # Test de communication SNMP
-snmpwalk -v1 127.0.0.1 -c Sorbonne_Universite
+snmpwalk -v1 $ip -c public
 sleep 3
 
 # Ajouter la configuration de firewall (DEV)
