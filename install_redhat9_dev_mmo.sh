@@ -141,13 +141,13 @@ dnf update -y net-snmp net-snmp-libs net-snmp-utils
 
 # Récupérer l'adresse IP de l'interface ens33
 ip=$(ip -4 addr show dev ens33 | grep inet | awk '{print $2}' | cut -d'/' -f1)
-echo "Adresse IP récupérée pour la configuration /etc/snmp/snmpd.conf : $ip"
+#echo "Adresse IP récupérée pour la configuration /etc/snmp/snmpd.conf : $ip"
 
 # Copie du fichier de configuration SNMP avant modification
-cp /etc/snmp/snmpd.conf /etc/snmp/snmpd.conf.old
+#cp /etc/snmp/snmpd.conf /etc/snmp/snmpd.conf.old
 
 # Mettre à jour le fichier de configuration SNMP
-sed -i "s/com2sec *notConfigUser *default *public/com2sec notConfigUser    $ip public/" /etc/snmp/snmpd.conf
+#sed -i "s/com2sec *notConfigUser *default *public/com2sec notConfigUser    $ip public/" /etc/snmp/snmpd.conf
 
 # Mettre à jour le fichier de configuration SNMP
 #sed -i -e 's/^#\(com2sec notConfigUser  default       public\)/com2sec notConfigUser  '$ip'       public/' \
@@ -167,11 +167,10 @@ sleep 3
 
 # Afficher le statut du service SNMP
 systemctl status snmpd
-sleep 3
 
 # Test de communication SNMP
-snmpwalk -v1 $ip -c public
-sleep 3
+#snmpwalk -v1 $ip -c public
+#sleep 3
 
 # Ajouter la configuration de firewall (DEV)
 firewall_config='<?xml version="1.0" encoding="utf-8"?>
