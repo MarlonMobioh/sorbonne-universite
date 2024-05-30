@@ -139,21 +139,22 @@ bash mise_en_conformite_esiansible.sh
 ip=$(ip -4 addr show dev ens33 | grep inet | awk '{print $2}' | cut -d'/' -f1)
 echo "Adresse IP récupérée : $ip"
 
+# Copie du fichier de configuration SNMP avant modification
 cp /etc/snmp/snmpd.conf /etc/snmp/snmpd.conf.old
 # Mettre à jour le fichier de configuration SNMP
 sed -i -e 's/^#\(com2sec notConfigUser  default       public\)/com2sec notConfigUser  '$ip'       public/' \
-#       -e 's/^#\(group   notConfigGroup v1           notConfigUser\)/\1/' \
-#       -e 's/^#\(group   notConfigGroup v2c           notConfigUser\)/\1/' \
-#       -e 's/^#\(view    systemview    included   .1.3.6.1.2.1.1\)/\1/' \
-#       -e 's/^#\(view    systemview    included   .1.3.6.1.2.1.25.1.1\)/\1/' \
-#       -e 's/^#\(access  notConfigGroup ""      any       noauth    exact  systemview none none\)/\1/' \
-#       -e 's/^#\(syslocation Unknown (edit \/etc\/snmp\/snmpd.conf)\)/\1/' \
-#       -e 's/^#\(syscontact Root <root@localhost> (configure \/etc\/snmp\/snmp.local.conf)\)/\1/' \
-#       /etc/snmp/snmpd.conf
+       -e 's/^#\(group   notConfigGroup v1           notConfigUser\)/\1/' \
+       -e 's/^#\(group   notConfigGroup v2c           notConfigUser\)/\1/' \
+       -e 's/^#\(view    systemview    included   .1.3.6.1.2.1.1\)/\1/' \
+       -e 's/^#\(view    systemview    included   .1.3.6.1.2.1.25.1.1\)/\1/' \
+       -e 's/^#\(access  notConfigGroup ""      any       noauth    exact  systemview none none\)/\1/' \
+       -e 's/^#\(syslocation Unknown (edit \/etc\/snmp\/snmpd.conf)\)/\1/' \
+       -e 's/^#\(syscontact Root <root@localhost> (configure \/etc\/snmp\/snmp.local.conf)\)/\1/' \
+       /etc/snmp/snmpd.conf
 
 # Ajouter ou modifier les valeurs pour syslocation et syscontact
-#sed -i 's/syslocation Unknown (edit \/etc\/snmp\/snmpd.conf)/syslocation "MyLocation"/' /etc/snmp/snmpd.conf
-#sed -i 's/syscontact Root <root@localhost> (configure \/etc\/snmp\/snmp.local.conf)/syscontact "Admin <admin@example.com>"/' /etc/snmp/snmpd.conf
+sed -i 's/syslocation Unknown (edit \/etc\/snmp\/snmpd.conf)/syslocation "MyLocation"/' /etc/snmp/snmpd.conf
+sed -i 's/syscontact Root <root@localhost> (configure \/etc\/snmp\/snmp.local.conf)/syscontact "Admin <admin@example.com>"/' /etc/snmp/snmpd.conf
 
 # Redémarrer le service SNMP
 systemctl restart snmpd
