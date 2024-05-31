@@ -40,3 +40,12 @@ for user_home in /home/*; do
         fi
     fi
 done
+
+# Commandes standards :
+#
+# mkdir /home/USER/.ssh
+# chmod 700 /home/USER/.ssh/
+# touch /home/USER/.ssh/authorized_keys
+# chmod 600 /home/USER/.ssh/authorized_keys
+# sudo chown -hR USER:USER /home/USER/.ssh/
+#
