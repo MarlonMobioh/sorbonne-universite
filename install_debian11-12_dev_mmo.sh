@@ -212,7 +212,7 @@ sudo sed -i "s/^agentaddress .*/agentaddress 127.0.0.1,\[::1\],udp:$ip:161/" /et
 
 # Afficher le contenu du fichier de configuration SNMP
 echo "Contenu de /etc/snmp/snmpd.conf après la mise à jour :"
-cat /etc/snmp/snmpd.conf
+cat /etc/snmp/snmpd.conf | grep 161
 
 # Redémarrer le service SNMP
 sudo systemctl restart snmpd
