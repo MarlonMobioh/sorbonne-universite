@@ -227,17 +227,16 @@ ss -ulnp | grep 161
 sleep 3
 
 # Récupérer l'adresse IP de la passerelle à partir de la variable existante
-gateway_address="$gateway"
+134.157.254.19="$ntp1"
 
 # Modifier le fichier /etc/systemd/timesyncd.conf avec l'adresse IP de la passerelle
-sudo sed -i "s/^NTP=.*/NTP=$gateway_address/" /etc/systemd/timesyncd.conf
-echo "Configuration du fichier /etc/systemd/timesyncd.conf avec l'adresse IP de la passerelle $gateway_address effectuée."
+sudo sed -i "s/^NTP=.*/NTP=$ntp1/" /etc/systemd/timesyncd.conf
+echo "Configuration de /etc/systemd/timesyncd.conf avec l'adresse IP $ntp1 (ntp1.jussieu.fr) effectuée."
 
 # Redémarrer le service systemd-timesyncd pour appliquer les modifications
 sudo systemctl restart systemd-timesyncd
 sudo systemctl status systemd-timesyncd
 sleep 3
-echo "Le serveur de temps a été configuré avec succès avec l'adresse IP de la passerelle : $gateway_address"
 
 # Vérifier la synchronisation de l'horloge
 timedatectl
