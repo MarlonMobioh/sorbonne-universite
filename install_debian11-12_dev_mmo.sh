@@ -35,25 +35,6 @@ read subnet_mask
 echo -e "\e[91mEntrez la passerelle par défaut : \e[0m"
 read gateway
 
-# Demande à l'utilisateur de saisir le nouveau nom de la machine
-#echo "Quel est le nouveau nom complet de la machine ? (format = server1.dev.dsi.priv.sorbonne-universite.fr)"
-#read new_hostname
-
-# Modification du nom d'hôte
-#echo "$new_hostname" | sudo tee /etc/hostname > /dev/null
-#sudo hostnamectl set-hostname "$new_hostname"
-
-# Redémarrer le service systemd-hostnamed pour appliquer les modifications
-#udo systemctl restart systemd-hostnamed
-
-#echo "Le nom de la machine a été modifié avec succès en : $new_hostname"
-
-
-# Demander à l'utilisateur l'adresse IP, le masque de sous-réseau et la passerelle
-#read -p "Entrez l'adresse IP : " ip_address
-#read -p "Entrez le masque de sous-réseau : " subnet_mask
-#read -p "Entrez la passerelle par défaut : " gateway
-
 # Modifier le fichier /etc/network/interfaces avec les nouvelles valeurs
 echo "
 # This file describes the network interfaces available on your system
