@@ -320,7 +320,7 @@ alias cp="cp -i"
 alias mv="mv -i"
 alias last="last -F"
 
-export PATH="/snap/bin/:\$PATH"
+export PATH="/snap/bin:$PATH"
 '
 
 # Ajouter le contenu CONTENTBASHRCADD à la fin du fichier .bashrc
