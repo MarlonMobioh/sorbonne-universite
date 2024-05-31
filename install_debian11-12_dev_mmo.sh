@@ -124,49 +124,36 @@ for user_pass in "${user_passwords[@]}"; do
     fi
 done
 
-# Parcours des utilisateurs dans /home
-for user_home in /home/*/; do
-    username=$(basename "$user_home")
-    
-    # Vérifie si l'utilisateur n'est pas root
-    if [ "$username" != "root" ]; then
-        # Modifier le shell de l'utilisateur à "/usr/bin/bash"
-        usermod -s /usr/bin/bash "$username"
-        echo "Le shell de l'utilisateur $username a été modifié en /usr/bin/bash"
-    fi
-done
-
 # Parcourir tous les répertoires utilisateur sous /home
 for user_home in /home/*; do
     if [ -d "$user_home" ]; then
         username=$(basename "$user_home")
 
-        # Vérifier si l'utilisateur a un dossier .ssh dans son répertoire personnel
-        if [ -d "$user_home/.ssh" ]; then
-            authorized_keys_file="$user_home/.ssh/authorized_keys"
+        # Vérifie si l'utilisateur n'est pas root et n'est pas un utilisateur système
+        if [ "$username" != "root" ] && id -u "$username" >/dev/null 2>&1 && [ "$(id -u "$username")" -ge 1000 ]; then
+            # Modifier le shell de l'utilisateur à "/usr/bin/bash"
+            usermod -s /usr/bin/bash "$username"
+            echo "Le shell de l'utilisateur $username a été modifié en /usr/bin/bash"
+        fi
 
-            # Vérifier si le fichier authorized_keys existe déjà
-            if [ -f "$authorized_keys_file" ]; then
-                echo "Le fichier $authorized_keys_file existe déjà pour l'utilisateur $username. Ignorer."
-            else
-                # Créer un fichier authorized_keys vide
-                touch "$authorized_keys_file"
-                chmod 600 "$authorized_keys_file"
-                chown "$username:$username" "$authorized_keys_file"
-                echo "Fichier $authorized_keys_file créé pour l'utilisateur $username."
-            fi
-        else
-            # Si le dossier .ssh n'existe pas, le créer
-            mkdir -p "$user_home/.ssh"
-            chmod 700 "$user_home/.ssh"
-            chown "$username:$username" "$user_home/.ssh"
+        ssh_dir="$user_home/.ssh"
+        authorized_keys_file="$ssh_dir/authorized_keys"
 
-            # Créer un fichier authorized_keys vide
-            authorized_keys_file="$user_home/.ssh/authorized_keys"
+        # Créer le dossier .ssh s'il n'existe pas, avec les permissions appropriées
+        if [ ! -d "$ssh_dir" ]; then
+            mkdir -p "$ssh_dir"
+            chmod 700 "$ssh_dir"
+            chown "$username:$username" "$ssh_dir"
+        fi
+
+        # Créer le fichier authorized_keys s'il n'existe pas, avec les permissions appropriées
+        if [ ! -f "$authorized_keys_file" ]; then
             touch "$authorized_keys_file"
             chmod 600 "$authorized_keys_file"
             chown "$username:$username" "$authorized_keys_file"
             echo "Fichier $authorized_keys_file créé pour l'utilisateur $username."
+        else
+            echo "Le fichier $authorized_keys_file existe déjà pour l'utilisateur $username. Ignorer."
         fi
     fi
 done
