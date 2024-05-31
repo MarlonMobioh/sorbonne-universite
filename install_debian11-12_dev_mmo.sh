@@ -194,8 +194,10 @@ firewall-cmd --zone=work --add-port=80/tcp --permanent
 firewall-cmd --permanent --add-port=161/udp
 
 # Redémarrer le service firewalld pour appliquer les modifications
+firewall-cmd --reload
 systemctl restart firewalld
-echo "Le service firewalld a été redémarré."
+echo "*** Le service firewalld a été redémarré.***"
+sleep 3
 
 #Création du compte esiansible SU
 wget https://gitlab.dsi.sorbonne-universite.fr/cherigui/dsi-public/-/raw/main/mise_en_conformite_esiansible.sh
@@ -275,14 +277,7 @@ apt install -y ccze mc tmux rsync htop net-tools dnsutils
 # Default prompt en cas de problème :
 # export PS1='\[\033[01;31m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 
-CONTENTBASHRCADD='# ~/.bashrc: executed by bash(1) for non-login shells.
-
-# Note: PS1 and umask are already set in /etc/profile. You should not
-# need this unless you want different defaults for root.
-# PS1='${debian_chroot:+($debian_chroot)}\h:\w\$ '
-# umask 022
-
-# ------------------------
+CONTENTBASHRCADD='# ------------------------
 # Configuration du prompt
 # ------------------------
 # Prompt colors
