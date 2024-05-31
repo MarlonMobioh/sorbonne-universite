@@ -140,7 +140,7 @@ dnf install -y net-snmp net-snmp-libs net-snmp-utils
 dnf update -y net-snmp net-snmp-libs net-snmp-utils
 
 # Récupérer l'adresse IP de l'interface ens33
-ip=$(ip -4 addr show dev ens33 | grep inet | awk '{print $2}' | cut -d'/' -f1)
+#ip=$(ip -4 addr show dev ens33 | grep inet | awk '{print $2}' | cut -d'/' -f1)
 #echo "Adresse IP récupérée pour la configuration /etc/snmp/snmpd.conf : $ip"
 
 # Copie du fichier de configuration SNMP avant modification
