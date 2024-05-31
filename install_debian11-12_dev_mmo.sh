@@ -333,7 +333,7 @@ source /root/.bashrc
 #systemctl restart logrotate.service
 
 # Vérifier que tous les services critiques sont en cours d’exécution
-sudo systemctl list-units --type=service
+systemctl list-units --type=service
 
 # Régénérer les clef SSH du host
 rm -f /etc/ssh/ssh_host_* && dpkg-reconfigure openssh-server && \
