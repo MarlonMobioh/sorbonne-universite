@@ -231,6 +231,10 @@ sudo systemctl restart snmpd
 # Afficher le statut du service SNMP
 sudo systemctl status snmpd
 
+# Lister les ports en écoute
+ss -ulnp | grep 161
+sleep 3
+
 # Récupérer l'adresse IP de la passerelle à partir de la variable existante
 gateway_address="$gateway"
 
