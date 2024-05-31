@@ -336,15 +336,19 @@ sudo systemctl list-units --type=service
 rm -f /etc/ssh/ssh_host_* && dpkg-reconfigure openssh-server && \
 /etc/init.d/ssh restart
 
-
 # Vidage du contenu des fichiers de journalisation système
-echo "" > /var/log/wtmp
-echo "" > /var/log/lastlog
+> /var/log/wtmp
+> /var/log/lastlog
 
 # Suppression history
 history -c
 
 # Message de fin de script
-echo "Fin du script."
+echo "********** Fin du script **********"
+sleep 2
 
+echo "************************************************"
+echo "********** Redémarrage du serveur ... **********"
+echo "************************************************"
+sleep 3
 reboot
