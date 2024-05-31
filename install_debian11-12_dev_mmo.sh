@@ -192,7 +192,7 @@ firewall-cmd --zone=work --add-port=443/tcp --permanent
 firewall-cmd --zone=work --add-port=80/tcp --permanent
 
 # Ouvrir le port EON (supervision)
-firewall-cmd --permanent --add-port=161/udp
+firewall-cmd --zone=work --add-port=161/udp --permanent
 
 # Redémarrer le service firewalld pour appliquer les modifications
 firewall-cmd --reload
