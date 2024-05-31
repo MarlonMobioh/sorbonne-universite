@@ -68,6 +68,7 @@ systemctl restart networking
 #ifdown ens192
 #ifup ens192
 #ip link set ens192 up
+sleep 3
 
 echo "Adresse IP changée avec succès. Nouvelles valeurs :"
 ip addr show ens192 | grep -w inet
@@ -213,6 +214,7 @@ sudo sed -i "s/^agentaddress .*/agentaddress 127.0.0.1,\[::1\],udp:$ip:161/" /et
 # Afficher le contenu du fichier de configuration SNMP
 echo "Contenu de /etc/snmp/snmpd.conf après la mise à jour :"
 cat /etc/snmp/snmpd.conf | grep 161
+sleep 3
 
 # Redémarrer le service SNMP
 sudo systemctl restart snmpd
@@ -229,11 +231,17 @@ gateway_address="$gateway"
 
 # Modifier le fichier /etc/systemd/timesyncd.conf avec l'adresse IP de la passerelle
 sudo sed -i "s/^NTP=.*/NTP=$gateway_address/" /etc/systemd/timesyncd.conf
+echo "Configuration du fichier /etc/systemd/timesyncd.conf avec l'adresse IP de la passerelle $gateway_address effectuée."
 
 # Redémarrer le service systemd-timesyncd pour appliquer les modifications
 sudo systemctl restart systemd-timesyncd
-
+sudo systemctl status systemd-timesyncd
+sleep 3
 echo "Le serveur de temps a été configuré avec succès avec l'adresse IP de la passerelle : $gateway_address"
+
+# Vérifier la synchronisation de l'horloge
+timedatectl
+sleep 3
 
 # Update des paquets
 apt-get update && apt-get -y upgrade && apt autoremove -y && apt-get clean -y
