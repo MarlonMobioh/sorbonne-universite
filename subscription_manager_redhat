@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Enregistrement dans RedHat (mmobioh ; Sorbonne@2023)
 echo "Enregistrement dans RedHat :"
 echo "Nettoyage des informations d'inscription précédentes"
