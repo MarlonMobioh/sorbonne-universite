@@ -192,7 +192,6 @@ firewall-cmd --zone=work --add-port=161/udp --permanent
 
 # Redémarrer le service firewalld pour appliquer les modifications
 firewall-cmd --reload
-sleep 2
 systemctl restart firewalld
 echo "*** Le service firewalld a été redémarré.***"
 sleep 3
