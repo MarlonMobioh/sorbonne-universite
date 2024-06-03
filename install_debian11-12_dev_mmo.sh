@@ -187,7 +187,12 @@ firewall_config='<?xml version="1.0" encoding="utf-8"?>
 echo "$firewall_config" > /etc/firewalld/zones/work.xml
 echo "Configuration de firewall ajoutée dans work.xml."
 
-# Ouvrir le port EON (supervision)
+# Ajouter les services et ports nécessaires à la zone work + Ouvrir le port EON (supervision)
+firewall-cmd --zone=work --add-service=ssh --permanent
+firewall-cmd --zone=work --add-service=http --permanent
+firewall-cmd --zone=work --add-service=https --permanent
+firewall-cmd --zone=work --add-service=cockpit --permanent
+firewall-cmd --zone=work --add-port=161/udp --permanent
 firewall-cmd --zone=work --add-port=161/udp --permanent
 
 # Redémarrer le service firewalld pour appliquer les modifications
@@ -223,7 +228,7 @@ ss -ulnp | grep 161
 sleep 3
 
 # Récupérer l'adresse IP de la passerelle à partir de la variable existante
-134.157.254.19="$ntp1"
+ntp1="134.157.254.19"
 
 # Modifier le fichier /etc/systemd/timesyncd.conf avec l'adresse IP de la passerelle
 sudo sed -i "s/^NTP=.*/NTP='$ntp1'/" /etc/systemd/timesyncd.conf
