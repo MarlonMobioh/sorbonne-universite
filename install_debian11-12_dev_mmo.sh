@@ -82,14 +82,13 @@ machine_ip=$(hostname -I | awk '{print $1}')
 # Nom d'hôte à associer
 machine_hostname=$(hostname)
 
-# Vérifier si l'adresse IP et le nom d'hôte sont définis dans /etc/hosts
-if [[ -z "$machine_ip" || -z "$machine_hostname" ]]; then
-    echo "Impossible de récupérer l'adresse IP ou le nom d'hôte. Arrêt du script."
-    exit 1
+# Vérifier que l'adresse IP et le nom d'hôte sont correctement définis dans /etc/hosts
+if ! grep -q "$machine_ip\s*$machine_hostname" /etc/hosts; then
+    echo "L'adresse IP et/ou le nom d'hôte ne sont pas correctement définis dans /etc/hosts."
+    echo "Ajout des entrées dans /etc/hosts..."
+    echo "$machine_ip $machine_hostname" >> /etc/hosts
+    echo "Les entrées ont été ajoutées à /etc/hosts."
 fi
-
-# Ajouter une entrée dans /etc/hosts
-sudo bash -c "echo '$machine_ip $machine_hostname' >> /etc/hosts"
 
 # Définition des utilisateurs dans un tableau avec leur mot de passe respectif
 user_passwords=(
