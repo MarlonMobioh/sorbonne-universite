@@ -5,6 +5,11 @@ cd /tmp
 wget https://raw.githubusercontent.com/MarlonMobioh/SU/main/add_authorized_key_file.sh
 bash add_authorized_key_file.sh
 
+# ADD SUBSCRIPTION MANAGER REDHAT
+cd /tmp
+wget https://raw.githubusercontent.com/MarlonMobioh/SU/main/subscription_manager_redhat.sh
+bash subscription_manager_redhat.sh
+
 # DEV DEBIAN 11-12
 cd /tmp
 wget https://raw.githubusercontent.com/MarlonMobioh/SU/main/install_debian11-12_dev_mmo.sh
