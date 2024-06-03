@@ -232,7 +232,7 @@ sleep 3
 134.157.254.19="$ntp1"
 
 # Modifier le fichier /etc/systemd/timesyncd.conf avec l'adresse IP de la passerelle
-sudo sed -i "s/^NTP=.*/NTP=$ntp1/" /etc/systemd/timesyncd.conf
+sudo sed -i "s/^NTP=.*/NTP='$ntp1'/" /etc/systemd/timesyncd.conf
 echo "Configuration de /etc/systemd/timesyncd.conf avec l'adresse IP $ntp1 (ntp1.jussieu.fr) effectuée."
 
 # Redémarrer le service systemd-timesyncd pour appliquer les modifications
