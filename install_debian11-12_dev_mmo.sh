@@ -193,7 +193,6 @@ firewall-cmd --zone=work --add-service=http --permanent
 firewall-cmd --zone=work --add-service=https --permanent
 firewall-cmd --zone=work --add-service=cockpit --permanent
 firewall-cmd --zone=work --add-port=161/udp --permanent
-firewall-cmd --zone=work --add-port=161/udp --permanent
 
 # Redémarrer le service firewalld pour appliquer les modifications
 firewall-cmd --reload
