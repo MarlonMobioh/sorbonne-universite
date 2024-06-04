@@ -1,14 +1,14 @@
 #!/bin/bash
 
 ##########################################################################################
-#                                        PROD
+#                                        PROD PRIV
 # Ce script modifie les parametres suivants sur un serveur lors d'une installation DEBIAN 11 et DEBIAN 12 :
 #
 # - Hostname
 # - Adressage IP [interface ens192]
 # - Création de l'ensemble des utilisateurs PEI ESI + esiansible
 # - Création des dossiers et du fichier authorized_keys des utilisateurs PEI ESI
-# - Ajout de la configuration du firewall (PROD)
+# - Ajout de la configuration du firewall (PROD PRIV)
 # - Configuration du fichier snmpd
 # - Configuration du serveur de temps "timedatectl"
 # - Mise a jour des paquets [apt update]
