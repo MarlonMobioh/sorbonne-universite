@@ -78,7 +78,7 @@ echo "Adresse IP changée avec succès. Nouvelles valeurs :"
 ip addr show ens192 | grep -w inet
 
 # Demande à l'utilisateur de saisir l'adresse du proxy
-echo "Quel est l'adresse du proxy de la machine ? (format = http://10.11.XXX.XXX/)"
+echo "\e[91mQuel est l'adresse du proxy de la machine ? (format = http://10.11.XXX.XXX/)\e[0m"
 read new_proxy
 
 # Configuration des paramètres du proxy
