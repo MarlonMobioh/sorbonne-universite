@@ -220,6 +220,7 @@ firewall-cmd --zone=work --add-service=http --permanent
 firewall-cmd --zone=work --add-service=https --permanent
 firewall-cmd --zone=work --add-service=cockpit --permanent
 firewall-cmd --zone=internal --add-port=161/udp --permanent
+firewall-cmd --zone=internal --add-source=134.157.254.117 --permanent
 firewall-cmd --zone=work --add-source=172.22.0.0/24 --permanent
 firewall-cmd --zone=work --add-source=10.50.0.0/18 --permanent
 firewall-cmd --zone=work --add-source=134.157.134.0/24 --permanent
@@ -229,8 +230,6 @@ firewall-cmd --zone=work --add-source=134.157.126.0/23 --permanent
 firewall-cmd --zone=work --add-source=134.157.164.0/23 --permanent
 firewall-cmd --zone=work --add-source=134.157.150.0/24 --permanent
 firewall-cmd --zone=work --add-source=134.157.1.240/23 --permanent
-firewall-cmd --zone=work --add-source=134.157.134.91 --permanent
-firewall-cmd --zone=work --add-source=134.157.1.128/25 --permanent
 firewall-cmd --zone=work --add-source=10.11.7.239 --permanent
 firewall-cmd --zone=work --add-source=134.157.254.8 --permanent
 firewall-cmd --zone=work --add-source=134.157.254.117 --permanent
