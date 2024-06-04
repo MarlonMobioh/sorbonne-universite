@@ -37,8 +37,6 @@ hostnamectl set-hostname "$new_hostname"
 # Redémarrer le service systemd-hostnamed pour appliquer les modifications
 systemctl restart systemd-hostnamed
 
-echo "Le nom de la machine a été modifié avec succès en : $new_hostname"
-
 # Demander à l'utilisateur l'adresse IP, le masque de sous-réseau et la passerelle
 echo -e "\e[91mEntrez l'adresse IP : \e[0m" 
 read ip_address
