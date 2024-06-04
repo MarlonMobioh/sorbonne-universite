@@ -32,10 +32,10 @@ echo "Le nom de la machine a été modifié avec succès en : $new_hostname"
 
 # Modification du nom d'hôte
 echo "$new_hostname" | sudo tee /etc/hostname > /dev/null
-sudo hostnamectl set-hostname "$new_hostname"
+hostnamectl set-hostname "$new_hostname"
 
 # Redémarrer le service systemd-hostnamed pour appliquer les modifications
-sudo systemctl restart systemd-hostnamed
+systemctl restart systemd-hostnamed
 
 echo "Le nom de la machine a été modifié avec succès en : $new_hostname"
 
