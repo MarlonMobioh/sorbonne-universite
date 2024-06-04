@@ -8,11 +8,14 @@
 # - Adressage IP [interface ens192]
 # - Création de l'ensemble des utilisateurs PEI ESI + esiansible
 # - Création des dossiers et du fichier authorized_keys des utilisateurs PEI ESI
+# - Ajout de la configuration du firewall (DEV)
 # - Configuration du fichier snmpd
 # - Configuration du serveur de temps "timedatectl"
 # - Mise a jour des paquets [apt update]
 # - Modification du /root/.bashrc
 # - Vérifier que tous les services critiques sont en cours d’exécution
+# - Suppression history / Suppression lastlog
+# - Redemarrage du serveur
 #
 ##########################################################################################
 
@@ -194,9 +197,10 @@ firewall-cmd --zone=work --add-service=https --permanent
 firewall-cmd --zone=work --add-service=cockpit --permanent
 firewall-cmd --zone=work --add-port=161/udp --permanent
 
-# Redémarrer le service firewalld pour appliquer les modifications
+# Redémarrer le service firewalld pour appliquer les modifications + afficher le statut du service firewalld
 firewall-cmd --reload
 systemctl restart firewalld
+systemctl status firewalld
 echo "*** Le service firewalld a été redémarré.***"
 sleep 3
 
@@ -216,10 +220,8 @@ echo "Contenu de /etc/snmp/snmpd.conf après la mise à jour :"
 cat /etc/snmp/snmpd.conf | grep 161
 sleep 3
 
-# Redémarrer le service SNMP
+# Redémarrer le service SNMP + afficher le statut du service SNMP
 sudo systemctl restart snmpd
-
-# Afficher le statut du service SNMP
 sudo systemctl status snmpd
 
 # Lister les ports en écoute
@@ -233,9 +235,9 @@ ntp1="134.157.254.19"
 sudo sed -i "s/^NTP=.*/NTP='$ntp1'/" /etc/systemd/timesyncd.conf
 echo "Configuration de /etc/systemd/timesyncd.conf avec l'adresse IP $ntp1 (ntp1.jussieu.fr) effectuée."
 
-# Redémarrer le service systemd-timesyncd pour appliquer les modifications
-sudo systemctl restart systemd-timesyncd
-sudo systemctl status systemd-timesyncd
+# Redémarrer le service systemd-timesyncd pour appliquer les modifications + afficher le statut du service systemd-timesyncd
+systemctl restart systemd-timesyncd
+systemctl status systemd-timesyncd
 sleep 3
 
 # Vérifier la synchronisation de l'horloge
