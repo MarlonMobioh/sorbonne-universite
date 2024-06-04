@@ -260,7 +260,7 @@ systemctl disable postfix
 dnf install -y shellcheck
 dnf install -y net-tools
 dnf install -y psmisc
-dnf install -y mailx mailutils
+dnf install -y mailx mailutils s-nail
 dnf install -y cyrus-sasl
 dnf install -y rsyslog
 dnf install -y openssh-clients
