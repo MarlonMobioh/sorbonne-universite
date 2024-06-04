@@ -228,8 +228,7 @@ systemctl disable postfix
 yum install -y shellcheck
 yum install -y net-tools
 yum install -y psmisc
-yum install -y mailx s-nail
-yum install -y mailutils
+yum install -y mailx s-nail mailutils
 yum install -y sasl2-bin
 yum install -y rsyslog
 yum install -y openssh-clients
