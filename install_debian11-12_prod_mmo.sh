@@ -8,11 +8,14 @@
 # - Adressage IP [interface ens192]
 # - Création de l'ensemble des utilisateurs PEI ESI + esiansible
 # - Création des dossiers et du fichier authorized_keys des utilisateurs PEI ESI
+# - Ajout de la configuration du firewall (PROD)
 # - Configuration du fichier snmpd
 # - Configuration du serveur de temps "timedatectl"
 # - Mise a jour des paquets [apt update]
 # - Modification du /root/.bashrc
 # - Vérifier que tous les services critiques sont en cours d’exécution
+# - Suppression history / Suppression lastlog
+# - Redemarrage du serveur
 #
 ##########################################################################################
 
@@ -23,22 +26,24 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 # Demande à l'utilisateur de saisir le nouveau nom de la machine
-echo "Quel est le nouveau nom complet de la machine ? (format = server1.dev.dsi.priv.sorbonne-universite.fr)"
+echo -e "\e[91mQuel est le nouveau nom complet de la machine ? (format = server1.prod.dsi.sorbonne-universite.fr)\e[0m"
 read new_hostname
+echo "Le nom de la machine a été modifié avec succès en : $new_hostname"
 
 # Modification du nom d'hôte
 echo "$new_hostname" | sudo tee /etc/hostname > /dev/null
-sudo hostnamectl set-hostname "$new_hostname"
+hostnamectl set-hostname "$new_hostname"
 
 # Redémarrer le service systemd-hostnamed pour appliquer les modifications
-sudo systemctl restart systemd-hostnamed
-
-echo "Le nom de la machine a été modifié avec succès en : $new_hostname"
+systemctl restart systemd-hostnamed
 
 # Demander à l'utilisateur l'adresse IP, le masque de sous-réseau et la passerelle
-read -p "Entrez l'adresse IP : " ip_address
-read -p "Entrez le masque de sous-réseau : " subnet_mask
-read -p "Entrez la passerelle par défaut : " gateway
+echo -e "\e[91mEntrez l'adresse IP : \e[0m" 
+read ip_address
+echo -e "\e[91mEntrez le masque de sous-réseau : \e[0m"
+read subnet_mask
+echo -e "\e[91mEntrez la passerelle par défaut : \e[0m"
+read gateway
 
 # Modifier le fichier /etc/network/interfaces avec les nouvelles valeurs
 echo "
@@ -54,12 +59,12 @@ iface lo inet loopback
 # The primary network interface
 auto ens192
 iface ens192 inet static
-    address $ip_address
-    netmask $subnet_mask
-    gateway $gateway
-    # dns-* options are implemented by the resolvconf package, if installed
-    dns-nameservers 134.157.0.129 134.157.192.1
-    dns-search sorbonne-universite.fr dsi.sorbonne-universite.fr
+	address $ip_address
+	netmask $subnet_mask
+	gateway $gateway
+        # dns-* options are implemented by the resolvconf package, if installed
+        dns-nameservers 134.157.0.129 134.157.192.1
+        dns-search sorbonne-universite.fr dsi.sorbonne-universite.fr
 " > /etc/network/interfaces
 
 # Redémarrer le service réseau pour appliquer les modifications
@@ -67,6 +72,7 @@ systemctl restart networking
 #ifdown ens192
 #ifup ens192
 #ip link set ens192 up
+sleep 3
 
 echo "Adresse IP changée avec succès. Nouvelles valeurs :"
 ip addr show ens192 | grep -w inet
@@ -77,14 +83,13 @@ machine_ip=$(hostname -I | awk '{print $1}')
 # Nom d'hôte à associer
 machine_hostname=$(hostname)
 
-# Vérifier si l'adresse IP et le nom d'hôte sont définis dans /etc/hosts
-if [[ -z "$machine_ip" || -z "$machine_hostname" ]]; then
-    echo "Impossible de récupérer l'adresse IP ou le nom d'hôte. Arrêt du script."
-    exit 1
+# Vérifier que l'adresse IP et le nom d'hôte sont correctement définis dans /etc/hosts
+if ! grep -q "$machine_ip\s*$machine_hostname" /etc/hosts; then
+    echo "L'adresse IP et/ou le nom d'hôte ne sont pas correctement définis dans /etc/hosts."
+    echo "Ajout des entrées dans /etc/hosts..."
+    echo "$machine_ip $machine_hostname" >> /etc/hosts
+    echo "Les entrées ont été ajoutées à /etc/hosts."
 fi
-
-# Ajouter une entrée dans /etc/hosts
-sudo bash -c "echo '$machine_ip $machine_hostname' >> /etc/hosts"
 
 # Définition des utilisateurs dans un tableau avec leur mot de passe respectif
 user_passwords=(
@@ -123,93 +128,94 @@ for user_pass in "${user_passwords[@]}"; do
     fi
 done
 
-# Parcours des utilisateurs dans /home
-for user_home in /home/*/; do
-    username=$(basename "$user_home")
-    
-    # Vérifie si l'utilisateur n'est pas root
-    if [ "$username" != "root" ]; then
-        # Modifier le shell de l'utilisateur à "/usr/bin/bash"
-        usermod -s /usr/bin/bash "$username"
-        echo "Le shell de l'utilisateur $username a été modifié en /usr/bin/bash"
-    fi
-done
-
 # Parcourir tous les répertoires utilisateur sous /home
 for user_home in /home/*; do
     if [ -d "$user_home" ]; then
         username=$(basename "$user_home")
 
-        # Vérifier si l'utilisateur a un dossier .ssh dans son répertoire personnel
-        if [ -d "$user_home/.ssh" ]; then
-            authorized_keys_file="$user_home/.ssh/authorized_keys"
+        # Vérifie si l'utilisateur n'est pas root et n'est pas un utilisateur système
+        if [ "$username" != "root" ] && id -u "$username" >/dev/null 2>&1 && [ "$(id -u "$username")" -ge 1000 ]; then
+            # Modifier le shell de l'utilisateur à "/usr/bin/bash"
+            usermod -s /usr/bin/bash "$username"
+            echo "Le shell de l'utilisateur $username a été modifié en /usr/bin/bash"
+        fi
 
-            # Vérifier si le fichier authorized_keys existe déjà
-            if [ -f "$authorized_keys_file" ]; then
-                echo "Le fichier $authorized_keys_file existe déjà pour l'utilisateur $username. Ignorer."
-            else
-                # Créer un fichier authorized_keys vide
-                touch "$authorized_keys_file"
-                chmod 600 "$authorized_keys_file"
-                chown "$username:$username" "$authorized_keys_file"
-                echo "Fichier $authorized_keys_file créé pour l'utilisateur $username."
-            fi
-        else
-            # Si le dossier .ssh n'existe pas, le créer
-            mkdir -p "$user_home/.ssh"
-            chmod 700 "$user_home/.ssh"
-            chown "$username:$username" "$user_home/.ssh"
+        ssh_dir="$user_home/.ssh"
+        authorized_keys_file="$ssh_dir/authorized_keys"
 
-            # Créer un fichier authorized_keys vide
-            authorized_keys_file="$user_home/.ssh/authorized_keys"
+        # Créer le dossier .ssh s'il n'existe pas, avec les permissions appropriées
+        if [ ! -d "$ssh_dir" ]; then
+            mkdir -p "$ssh_dir"
+            chmod 700 "$ssh_dir"
+            chown "$username:$username" "$ssh_dir"
+        fi
+
+        # Créer le fichier authorized_keys s'il n'existe pas, avec les permissions appropriées
+        if [ ! -f "$authorized_keys_file" ]; then
             touch "$authorized_keys_file"
             chmod 600 "$authorized_keys_file"
             chown "$username:$username" "$authorized_keys_file"
             echo "Fichier $authorized_keys_file créé pour l'utilisateur $username."
+        else
+            echo "Le fichier $authorized_keys_file existe déjà pour l'utilisateur $username. Ignorer."
         fi
     fi
 done
 
-# Ajouter la configuration de firewall (PROD)
-firewall_config='<?xml version="1.0" encoding="utf-8"?>
-<zone>
-  <short>Work</short>
-  <description>For use in work areas. You mostly trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.</description>
-  <service name="ssh"/>
-  <service name="http"/>
-  <service name="https"/>
-  <service name="cockpit"/>
-  <source address="172.22.0.0/24"/>
-  <source address="10.50.0.0/18"/>
-  <source address="134.157.143.0/24"/>
-  <source address="134.157.142.0/24"/>
-  <source address="134.157.126.0/23"/>
-  <source address="134.157.150.0/24"/>
-  <source address="134.157.164.0/23"/>
-  <source address="134.157.134.0/24"/>
-  <source address="134.157.23.0/24"/>
-  <source address="134.157.134.91"/>
-  <source address="134.157.1.128/25"/>
-  <source address="134.157.254.117"/>
-  <source address="134.157.254.8"/>
-  <forward/>
-</zone>'
+# Ajouter la configuration de firewall
+#firewall_config='<?xml version="1.0" encoding="utf-8"?>
+#<zone>
+#  <short>Work</short>
+#  <description>For use in work areas. You mostly trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.</description>
+#  <service name="ssh"/>
+#  <service name="http"/>
+#  <service name="https"/>
+#  <service name="cockpit"/>
+#  <source address="172.22.0.0/24"/>
+#  <source address="10.50.0.0/18"/>
+#  <source address="134.157.134.0/24"/>
+#  <source address="10.11.20.0/22"/>
+#  <source address="134.157.142.0/24"/>
+#  <source address="134.157.1.240/23"/>
+#  <source address="134.157.143.0/24"/>
+#  <source address="10.11.7.239"/>
+#  <source address="134.157.23.239"/>
+#  <source address="134.157.254.8"/>
+#  <source address="134.157.254.117"/> 
+#  <forward/>
+#</zone>'
 
-echo "$firewall_config" > /etc/firewalld/zones/work.xml
-echo "Configuration de firewall ajoutée dans work.xml."
+#echo "$firewall_config" > /etc/firewalld/zones/work.xml
+#echo "Configuration de firewall ajoutée dans work.xml."
 
-# Ouvrir les ports web sur le pare-feu local
-firewall-cmd --zone=public --add-port=80/tcp --permanent
-firewall-cmd --zone=public --add-port=443/tcp --permanent
-firewall-cmd --zone=work --add-port=443/tcp --permanent
-firewall-cmd --zone=work --add-port=80/tcp --permanent
+# Ajouter les services et ports nécessaires à la zone work + Ouvrir le port EON (supervision)
+firewall-cmd --zone=work --add-service=ssh --permanent
+firewall-cmd --zone=work --add-service=http --permanent
+firewall-cmd --zone=work --add-service=https --permanent
+firewall-cmd --zone=work --add-service=cockpit --permanent
+firewall-cmd --zone=internal --add-port=161/udp --permanent
+firewall-cmd --zone=work --add-source=172.22.0.0/24 --permanent
+firewall-cmd --zone=work --add-source=10.50.0.0/18 --permanent
+firewall-cmd --zone=work --add-source=134.157.134.0/24 --permanent
+firewall-cmd --zone=work --add-source=134.157.142.0/24 --permanent
+firewall-cmd --zone=work --add-source=134.157.143.0/24 --permanent
+firewall-cmd --zone=work --add-source=134.157.126.0/23 --permanent
+firewall-cmd --zone=work --add-source=134.157.164.0/23 --permanent
+firewall-cmd --zone=work --add-source=134.157.150.0/24 --permanent
+firewall-cmd --zone=work --add-source=134.157.1.240/23 --permanent
+firewall-cmd --zone=work --add-source=134.157.134.91 --permanent
+firewall-cmd --zone=work --add-source=134.157.1.128/25 --permanent
+firewall-cmd --zone=work --add-source=134.157.23.239 --permanent
+firewall-cmd --zone=work --add-source=10.11.7.239 --permanent
+firewall-cmd --zone=work --add-source=134.157.254.8 --permanent
+firewall-cmd --zone=work --add-source=134.157.254.117 --permanent
 
-# Ouvrir le port EON (supervision)
-firewall-cmd --permanent --zone=work --add-port=161/udp
-
-# Redémarrer le service firewalld pour appliquer les modifications
+# Redémarrer le service firewalld pour appliquer les modifications + afficher le statut du service firewalld
+firewall-cmd --reload
 systemctl restart firewalld
-echo "Le service firewalld a été redémarré."
+systemctl status firewalld
+echo "*** Le service firewalld a été redémarré.***"
+sleep 3
 
 #Création du compte esiansible SU
 wget https://gitlab.dsi.sorbonne-universite.fr/cherigui/dsi-public/-/raw/main/mise_en_conformite_esiansible.sh
@@ -224,30 +230,39 @@ sudo sed -i "s/^agentaddress .*/agentaddress 127.0.0.1,\[::1\],udp:$ip:161/" /et
 
 # Afficher le contenu du fichier de configuration SNMP
 echo "Contenu de /etc/snmp/snmpd.conf après la mise à jour :"
-cat /etc/snmp/snmpd.conf
+cat /etc/snmp/snmpd.conf | grep 161
+sleep 3
 
-# Redémarrer le service SNMP
+# Redémarrer le service SNMP + afficher le statut du service SNMP
 sudo systemctl restart snmpd
-
-# Afficher le statut du service SNMP
 sudo systemctl status snmpd
 
+# Lister les ports en écoute
+ss -ulnp | grep 161
+sleep 3
+
 # Récupérer l'adresse IP de la passerelle à partir de la variable existante
-gateway_address="$gateway"
+ntp1="134.157.23.254"
 
 # Modifier le fichier /etc/systemd/timesyncd.conf avec l'adresse IP de la passerelle
-sudo sed -i "s/^NTP=.*/NTP=$gateway_address/" /etc/systemd/timesyncd.conf
+sudo sed -i "s/^NTP=.*/NTP='$ntp1'/" /etc/systemd/timesyncd.conf
+echo "Configuration de /etc/systemd/timesyncd.conf avec l'adresse IP $ntp1 (r-v46.reseau.jussieu.fr) effectuée."
+cat /etc/systemd/timesyncd.conf | grep NTP
 
-# Redémarrer le service systemd-timesyncd pour appliquer les modifications
-sudo systemctl restart systemd-timesyncd
+# Redémarrer le service systemd-timesyncd pour appliquer les modifications + afficher le statut du service systemd-timesyncd
+systemctl restart systemd-timesyncd
+systemctl status systemd-timesyncd
+sleep 3
 
-echo "Le serveur de temps a été configuré avec succès avec l'adresse IP de la passerelle : $gateway_address"
+# Vérifier la synchronisation de l'horloge
+timedatectl
+sleep 3
 
 # Update des paquets
 apt-get update && apt-get -y upgrade && apt autoremove -y && apt-get clean -y
 
 # Retirer X11 pour améliorer les performances et la sécurité
-apt-get purge -y x11-common libwayland-server0
+apt-get purge x11-common libwayland-server0
 
 # Installation des paquets utiles
 apt install -y inxi
@@ -262,7 +277,7 @@ apt install -y mailx
 apt install -y mailutils
 apt install -y sasl2-bin
 apt install -y rsyslog
-apt install -y openssh-client
+apt install -y openssh-clients
 apt install -y wget
 apt install -y htop
 apt install -y dstat
@@ -285,15 +300,8 @@ apt install -y ccze mc tmux rsync htop net-tools dnsutils
 # Default prompt en cas de problème :
 # export PS1='\[\033[01;31m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 
-CONTENTBASHRCADD='# ~/.bashrc: executed by bash(1) for non-login shells.
-
-# Note: PS1 and umask are already set in /etc/profile. You should not
-# need this unless you want different defaults for root.
-# PS1='${debian_chroot:+($debian_chroot)}\h:\w\$ '
-# umask 022
-
-# ------------------------
-# Configuration du prompt
+CONTENTBASHRCADD='# ------------------------
+# Configuration du prompt | PEI-ESI (mmo,nsa)
 # ------------------------
 # Prompt colors
 C_RED="\[\e[1;31m\]"
@@ -327,31 +335,38 @@ alias cp="cp -i"
 alias mv="mv -i"
 alias last="last -F"
 
-export PATH="/snap/bin/:\$PATH"
+export PATH="/snap/bin:$PATH"
 '
 
 # Ajouter le contenu CONTENTBASHRCADD à la fin du fichier .bashrc
-echo "$CONTENTBASHRCADD" >> /root/.bashrc
+echo "$CONTENTBASHRCADD" > /root/.bashrc
 echo "Contenu ajouté avec succès à /root/.bashrc."
 
 # Charger les modifications du .bashrc
 source /root/.bashrc
 
+#systemctl restart logrotate.service
+
 # Vérifier que tous les services critiques sont en cours d’exécution
-sudo systemctl list-units --type=service
+systemctl list-units --type=service
 
 # Régénérer les clef SSH du host
 rm -f /etc/ssh/ssh_host_* && dpkg-reconfigure openssh-server && \
 /etc/init.d/ssh restart
 
 # Vidage du contenu des fichiers de journalisation système
-echo "" > /var/log/wtmp
-echo "" > /var/log/lastlog
+> /var/log/wtmp
+> /var/log/lastlog
 
 # Suppression history
 history -c
 
 # Message de fin de script
-echo "Fin du script."
+echo "********** Fin du script **********"
+sleep 2
 
+echo "************************************************"
+echo "********** Redémarrage du serveur ... **********"
+echo "************************************************"
+sleep 3
 reboot
