@@ -265,11 +265,11 @@ ss -ulnp | grep 161
 sleep 3
 
 # Récupérer l'adresse IP de la passerelle à partir de la variable existante
-ntp1="134.157.33.254"
+ntp1="10.11.19.254"
 
 # Modifier le fichier /etc/systemd/timesyncd.conf avec l'adresse IP de la passerelle
 sudo sed -i "s/^NTP=.*/NTP='$ntp1'/" /etc/systemd/timesyncd.conf
-echo "Configuration de /etc/systemd/timesyncd.conf avec l'adresse IP $ntp1 (r-v66.reseau.jussieu.fr) effectuée."
+echo "Configuration de /etc/systemd/timesyncd.conf avec l'adresse IP $ntp1 (r-v944.reseau.jussieu.fr) effectuée."
 cat /etc/systemd/timesyncd.conf | grep NTP
 
 # Redémarrer le service systemd-timesyncd pour appliquer les modifications + afficher le statut du service systemd-timesyncd
@@ -297,7 +297,7 @@ apt install -y shellcheck
 apt install -y net-tools
 apt install -y psmisc
 apt install -y mailx
-apt install -y mailutils
+apt install -y mailutils s-nail
 apt install -y sasl2-bin
 apt install -y rsyslog
 apt install -y openssh-clients
