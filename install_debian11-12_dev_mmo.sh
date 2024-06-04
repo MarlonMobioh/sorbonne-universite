@@ -165,37 +165,48 @@ for user_home in /home/*; do
 done
 
 # Ajouter la configuration de firewall (DEV)
-firewall_config='<?xml version="1.0" encoding="utf-8"?>
-<zone>
-  <short>Work</short>
-  <description>For use in work areas. You mostly trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.</description>
-  <service name="ssh"/>
-  <service name="http"/>
-  <service name="https"/>
-  <service name="cockpit"/>
-  <source address="172.22.0.0/24"/>
-  <source address="10.50.0.0/18"/>
-  <source address="134.157.134.0/24"/>
-  <source address="10.11.20.0/22"/>
-  <source address="134.157.142.0/24"/>
-  <source address="134.157.1.240/23"/>
-  <source address="134.157.143.0/24"/>
-  <source address="10.11.7.239"/>
-  <source address="134.157.23.239"/>
-  <source address="134.157.254.8"/>
-  <source address="134.157.254.117"/> 
-  <forward/>
-</zone>'
+#firewall_config='<?xml version="1.0" encoding="utf-8"?>
+#<zone>
+#  <short>Work</short>
+#  <description>For use in work areas. You mostly trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.</description>
+#  <service name="ssh"/>
+#  <service name="http"/>
+#  <service name="https"/>
+#  <service name="cockpit"/>
+#  <source address="172.22.0.0/24"/>
+#  <source address="10.50.0.0/18"/>
+#  <source address="134.157.134.0/24"/>
+#  <source address="10.11.20.0/22"/>
+#  <source address="134.157.142.0/24"/>
+#  <source address="134.157.1.240/23"/>
+#  <source address="134.157.143.0/24"/>
+#  <source address="10.11.7.239"/>
+#  <source address="134.157.23.239"/>
+#  <source address="134.157.254.8"/>
+#  <source address="134.157.254.117"/> 
+#  <forward/>
+#</zone>'
 
-echo "$firewall_config" > /etc/firewalld/zones/work.xml
-echo "Configuration de firewall ajoutée dans work.xml."
+#echo "$firewall_config" > /etc/firewalld/zones/work.xml
+#echo "Configuration de firewall ajoutée dans work.xml."
 
 # Ajouter les services et ports nécessaires à la zone work + Ouvrir le port EON (supervision)
 firewall-cmd --zone=work --add-service=ssh --permanent
 firewall-cmd --zone=work --add-service=http --permanent
 firewall-cmd --zone=work --add-service=https --permanent
 firewall-cmd --zone=work --add-service=cockpit --permanent
-firewall-cmd --zone=work --add-port=161/udp --permanent
+firewall-cmd --zone=internal --add-port=161/udp --permanent
+firewall-cmd --zone=work --add-source=172.22.0.0/24 --permanent
+firewall-cmd --zone=work --add-source=10.50.0.0/18 --permanent
+firewall-cmd --zone=work --add-source=134.157.134.0/24 --permanent
+firewall-cmd --zone=work --add-source=10.11.20.0/22 --permanent
+firewall-cmd --zone=work --add-source=134.157.142.0/24 --permanent
+firewall-cmd --zone=work --add-source=134.157.1.240/23 --permanent
+firewall-cmd --zone=work --add-source=134.157.143.0/24 --permanent
+firewall-cmd --zone=work --add-source=10.11.7.239 --permanent
+firewall-cmd --zone=work --add-source=134.157.23.239 --permanent
+firewall-cmd --zone=work --add-source=134.157.254.8 --permanent
+firewall-cmd --zone=work --add-source=134.157.254.117 --permanent
 
 # Redémarrer le service firewalld pour appliquer les modifications + afficher le statut du service firewalld
 firewall-cmd --reload
