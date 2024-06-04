@@ -204,7 +204,6 @@ firewall-cmd --zone=work --add-source=134.157.164.0/23 --permanent
 firewall-cmd --zone=work --add-source=134.157.150.0/24 --permanent
 firewall-cmd --zone=work --add-source=134.157.1.240/23 --permanent
 firewall-cmd --zone=work --add-source=134.157.33.239 --permanent
-firewall-cmd --zone=work --add-source=10.11.19.239 --permanent
 firewall-cmd --zone=work --add-source=134.157.254.8 --permanent
 firewall-cmd --zone=work --add-source=134.157.254.117 --permanent
 
