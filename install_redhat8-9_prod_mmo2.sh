@@ -37,19 +37,36 @@ read subnet_mask
 echo -e "\e[91mEntrez la passerelle par défaut : \e[0m"
 read gateway
 
-# Modifier le fichier de configuration réseau avec les nouvelles valeurs
-nmcli con mod ens33 ipv4.addresses "$ip_address/$subnet_mask" ipv4.gateway "$gateway" ipv4.dns "134.157.0.129,134.157.192.1" ipv4.method manual
+# Modifier le fichier /etc/sysconfig/network-scripts/ifcfg-ens33 avec les nouvelles valeurs
+cat <<EOF > /etc/sysconfig/network-scripts/ifcfg-ens33
+TYPE=Ethernet
+BOOTPROTO=none
+DEFROUTE=yes
+IPV4_FAILURE_FATAL=no
+IPV6INIT=yes
+IPV6_AUTOCONF=yes
+IPV6_DEFROUTE=yes
+IPV6_FAILURE_FATAL=no
+NAME=ens33
+DEVICE=ens33
+ONBOOT=yes
+IPADDR=$ip_address
+NETMASK=$subnet_mask
+GATEWAY=$gateway
+DNS1=134.157.0.129
+DNS2=134.157.192.1
+EOF
 
-# Redémarrer le service réseau pour appliquer les modifications
-nmcli con up ens33
+# Redémarrer l'interface réseau pour appliquer les modifications
+nmcli connection reload
+
+echo -e "\e[92mAdresse IP changée avec succès. Nouvelles valeurs : \e[0m"
+ip addr show ens33 | grep -w inet
+sleep 3
 
 # Modification du nom d'hôte
 hostnamectl set-hostname "$new_hostname"
 echo -e "\e[92mLe nom de la machine a été modifié avec succès en : $new_hostname\e[0m"
-sleep 3
-
-echo -e "\e[92mAdresse IP changée avec succès. Nouvelles valeurs : \e[0m"
-ip addr show ens33 | grep -w inet
 sleep 3
 
 # Déterminer l'adresse IP de la machine
