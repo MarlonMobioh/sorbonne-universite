@@ -184,7 +184,6 @@ firewall-cmd --zone=work --add-source=134.157.143.0/24 --permanent
 firewall-cmd --zone=work --add-source=10.11.7.239 --permanent
 firewall-cmd --zone=work --add-source=134.157.23.239 --permanent
 firewall-cmd --zone=work --add-source=134.157.254.8 --permanent
-firewall-cmd --zone=work --add-source=134.157.254.117 --permanent
 
 # Redémarrer le service firewalld pour appliquer les modifications + afficher le statut du service firewalld
 firewall-cmd --reload
