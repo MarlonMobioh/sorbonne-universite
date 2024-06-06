@@ -29,15 +29,6 @@ fi
 echo -e "\e[91mQuel est le nouveau nom complet de la machine ? (format = server1.dev.dsi.priv.sorbonne-universite.fr)\e[0m"
 read new_hostname
 
-# Modification du nom d'hôte
-echo "$new_hostname" | sudo tee /etc/hostname > /dev/null
-hostnamectl set-hostname "$new_hostname"
-
-# Redémarrer le service systemd-hostnamed pour appliquer les modifications
-systemctl restart systemd-hostnamed
-echo -e "\e[92mLe nom de la machine a été modifié avec succès en : $new_hostname\e[0m"
-sleep 3
-
 # Demander à l'utilisateur l'adresse IP, le masque de sous-réseau et la passerelle
 echo -e "\e[91mEntrez l'adresse IP : \e[0m" 
 read ip_address
@@ -48,6 +39,9 @@ read gateway
 
 # Modifier le fichier /etc/network/interfaces avec les nouvelles valeurs
 echo "
+# ------------------------
+# Configuration du prompt | PEI-ESI (mmo,nsa)
+# ------------------------
 # This file describes the network interfaces available on your system
 # and how to activate them. For more information, see interfaces(5). 
 
@@ -72,13 +66,20 @@ iface ens192 inet static
 systemctl restart networking
 systemctl status networking
 
+# Modification du nom d'hôte
+echo "$new_hostname" | sudo tee /etc/hostname > /dev/null
+hostnamectl set-hostname "$new_hostname"
+# Redémarrer le service systemd-hostnamed pour appliquer les modifications
+systemctl restart systemd-hostnamed
+echo -e "\e[92mLe nom de la machine a été modifié avec succès en : $new_hostname\e[0m"
+sleep 3
+
 echo -e "\e[92mAdresse IP changée avec succès. Nouvelles valeurs : \e[0m"
 ip addr show ens192 | grep -w inet
 sleep 3
 
 # Déterminer l'adresse IP de la machine
 machine_ip=$(hostname -I | awk '{print $1}')
-
 # Nom d'hôte à associer
 machine_hostname=$(hostname)
 
@@ -165,7 +166,7 @@ done
 # Ajouter la configuration de firewall (DEV)
 # Ajouter les services et ports nécessaires à la zone work, internal
 echo -e "\e[94mAjout des services et ports nécessaires Sorbonne Université :\e[0m"
-sleep 3
+sleep 2
 
 firewall-cmd --zone=work --add-service=ssh --permanent
 firewall-cmd --zone=work --add-service=http --permanent
@@ -188,8 +189,8 @@ firewall-cmd --zone=work --add-source=134.157.254.117 --permanent
 # Redémarrer le service firewalld pour appliquer les modifications + afficher le statut du service firewalld
 firewall-cmd --reload
 systemctl restart firewalld
-systemctl status firewalld
 echo -e "\e[92******\e[92mLe service firewalld a été redémarré.******\e[0m"
+systemctl status firewalld
 sleep 3
 
 #Création du compte esiansible SU
@@ -222,7 +223,7 @@ ntp1="134.157.254.19"
 
 # Modifier le fichier /etc/systemd/timesyncd.conf avec l'adresse IP de la passerelle
 sudo sed -i "s/^NTP=.*/NTP=$ntp1/" /etc/systemd/timesyncd.conf
-echo "Configuration de /etc/systemd/timesyncd.conf avec l'adresse IP $ntp1 (horlogegps.reseau.jussieu.fr) effectuée."
+echo -e "\e[92mConfiguration de /etc/systemd/timesyncd.conf avec l'adresse IP $ntp1 (horlogegps.reseau.jussieu.fr) effectuée.\e[0m"
 cat /etc/systemd/timesyncd.conf | grep NTP
 
 # Redémarrer le service systemd-timesyncd pour appliquer les modifications + afficher le statut du service systemd-timesyncd
@@ -236,6 +237,8 @@ timedatectl
 sleep 3
 
 # Update des paquets
+echo -e "\e[94mInstallation des paquets debian utiles Sorbonne Université :\e[0m"
+sleep 2
 apt-get update && apt-get -y upgrade && apt autoremove -y && apt-get clean -y
 
 # Retirer X11 pour améliorer les performances et la sécurité
@@ -273,6 +276,8 @@ apt install -y lsof
 apt install -y vim
 apt install -y ccze mc tmux rsync htop net-tools dnsutils
 
+echo -e "\e[94mModification du fichier /root/.bashrc Sorbonne Université :\e[0m"
+sleep 2
 # Modification du /root/.bashrc
 # Default prompt en cas de problème :
 # export PS1='\[\033[01;31m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
