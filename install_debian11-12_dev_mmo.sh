@@ -75,7 +75,7 @@ systemctl restart networking
 #ip link set ens192 up
 sleep 3
 
-echo "Adresse IP changée avec succès. Nouvelles valeurs :"
+echo -e "\e[92mAdresse IP changée avec succès. Nouvelles valeurs : \e[0m"
 ip addr show ens192 | grep -w inet
 
 # Déterminer l'adresse IP de la machine
@@ -221,7 +221,7 @@ bash mise_en_conformite_esiansible.sh
 
 # Récupérer l'adresse IP de l'interface ens192
 ip=$(ip -4 addr show dev ens192 | grep inet | awk '{print $2}' | cut -d'/' -f1)
-echo "Adresse IP récupérée : $ip"
+echo -e "\e[92mAdresse IP récupérée : $ip\e[0m"
 
 # Mettre à jour le fichier de configuration SNMP
 sudo sed -i "s/^agentaddress .*/agentaddress 127.0.0.1,\[::1\],udp:$ip:161/" /etc/snmp/snmpd.conf
@@ -338,7 +338,7 @@ export PATH="/snap/bin:$PATH"
 
 # Ajouter le contenu CONTENTBASHRCADD à la fin du fichier .bashrc
 echo "$CONTENTBASHRCADD" > /root/.bashrc
-echo "Contenu ajouté avec succès à /root/.bashrc."
+echo -e "\e[92mContenu ajouté avec succès à /root/.bashrc.\e[0m"
 
 # Charger les modifications du .bashrc
 source /root/.bashrc
