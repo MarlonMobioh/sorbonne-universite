@@ -38,10 +38,10 @@ echo -e "\e[91mEntrez la passerelle par défaut : \e[0m"
 read gateway
 
 # Modifier le fichier de configuration réseau avec les nouvelles valeurs
-nmcli con mod ens192 ipv4.addresses "$ip_address/$subnet_mask" ipv4.gateway "$gateway" ipv4.dns "134.157.0.129,134.157.192.1" ipv4.method manual
+nmcli con mod ens33 ipv4.addresses "$ip_address/$subnet_mask" ipv4.gateway "$gateway" ipv4.dns "134.157.0.129,134.157.192.1" ipv4.method manual
 
 # Redémarrer le service réseau pour appliquer les modifications
-nmcli con up ens192
+nmcli con up ens33
 
 # Modification du nom d'hôte
 hostnamectl set-hostname "$new_hostname"
@@ -49,7 +49,7 @@ echo -e "\e[92mLe nom de la machine a été modifié avec succès en : $new_host
 sleep 3
 
 echo -e "\e[92mAdresse IP changée avec succès. Nouvelles valeurs : \e[0m"
-ip addr show ens192 | grep -w inet
+ip addr show ens33 | grep -w inet
 sleep 3
 
 # Déterminer l'adresse IP de la machine
@@ -169,57 +169,143 @@ sleep 3
 
 # Création du compte esiansible SU
 echo -e "\e[94mAjout du compte esiansible Sorbonne Université :\e[0m"
-wget https://gitlab.dsi.upmc.fr/su-esi/esi-ansible/-/raw/main/templates/esiuser/user.sh
-bash user.sh
+wget https://gitlab.dsi.sorbonne-universite.fr/cherigui/dsi-public/-/raw/main/mise_en_conformite_esiansible.sh
+bash mise_en_conformite_esiansible.sh
 echo -e "\e[92mL'utilisateur esiansible a été ajouté.\e[0m"
 
-# Ajout du script snmpd
-echo -e "\e[94mAjout de la configuration SNMP SU :\e[0m"
-wget https://gitlab.dsi.upmc.fr/su-esi/esi-ansible/-/raw/main/templates/snmpd/snmpd.conf -O /etc/snmp/snmpd.conf
+# Installation des paquets necessaires SNMP
+dnf install -y net-snmp net-snmp-libs net-snmp-utils
+dnf update -y net-snmp net-snmp-libs net-snmp-utils
 systemctl restart snmpd
 systemctl enable snmpd
-echo -e "\e[92mLa configuration SNMP a été mise à jour.\e[0m"
+#echo -e "\e[92mLa configuration SNMP a été mise à jour.\e[0m"
 
-# Configuration serveur de temps "timedatectl"
+# Configuration de chronyd
 echo -e "\e[94mConfiguration du serveur de temps :\e[0m"
-timedatectl set-timezone Europe/Paris
-timedatectl set-ntp true
-echo -e "\e[92mLa configuration du serveur de temps a été mise à jour.\e[0m"
-timedatectl status
+# Sauvegarder le fichier de configuration original de chrony
+cp /etc/chrony.conf /etc/chrony.conf.old
+# Modifier /etc/chrony.conf pour utiliser la passerelle comme serveur NTP
+sed -i "s/^pool /#pool /" /etc/chrony.conf
+echo "server 134.157.254.19 iburst" >> /etc/chrony.conf
+# Redémarrer le service chronyd pour appliquer les modifications
+systemctl restart chronyd
+# Vérifier le statut du service chronyd
+systemctl status chronyd
+echo "\e[92m*** Le service chronyd a été redémarré.***\e[0m"
+echo "*** Waiting 5 sec ... ***"
+sleep 5
+# Vérifier la synchronisation de l'horloge
+timedatectl
+sleep 3
+echo "\e[92mConfiguration de chronyd avec l'adresse IP 134.157.254.19 (ntp1.jussieu.fr) effectuée.\e[0m"
+
+# Enregistrement dans RedHat (mmobioh ; Sorbonne@2023)
+echo "Enregistrement dans RedHat :"
+echo "Nettoyage des informations d'inscription précédentes"
+subscription-manager clean
+echo "Enregistrement de l'utilisateur [mmobioh]"
+subscription-manager register --username=mmobioh --password=Sorbonne@2023
+echo "Affichage de la liste des abonnements disponibles"
+subscription-manager list --available
+echo "Attachement de l'abonnement spécifique identifié par le code de pool 8a85f99977b0c0420177f2a086211111s"
+subscription-manager attach --pool=8a85f99977b0c0420177f2a086211111
+echo "*** Abonnement Redhat 8a85f99977b0c0420177f2a086211111 attaché ***"
 sleep 3
 
 # Mise à jour des paquets [dnf update]
 echo -e "\e[94mMise à jour des paquets du serveur :\e[0m"
 dnf update -y
+dnf upgrade -y
+dnf autoremove -y
+dnf clean all -y
+# Installation des paquets utiles
+dnf install -y inxi
+# Installation postfix (stoppé et désactivé)
+dnf install -y postfix
+systemctl stop postfix
+systemctl disable postfix
+dnf install -y shellcheck
+dnf install -y net-tools
+dnf install -y psmisc
+dnf install -y mailx mailutils s-nail
+dnf install -y cyrus-sasl
+dnf install -y rsyslog
+dnf install -y openssh-clients
+dnf install -y dstat
+dnf install -y iotop 
+dnf install -y lnav
+dnf install -y mlocate
+dnf install -y bind-utils 
+dnf install -y traceroute
+dnf install -y lsof htop telnet unzip whois vim wget man tree gcc
+dnf install -y ccze mc tmux rsync
 echo -e "\e[92mLa mise à jour des paquets est terminée.\e[0m"
 sleep 3
 
-# Ajout du proxy HTTP pour l'utilisateur root
-echo -e "\e[94mAjout de la configuration du proxy HTTP pour l'utilisateur root :\e[0m"
-cat <<EOF >> /root/.bashrc
+# Modification du /root/.bashrc
+cat <<'EOF' > /root/.bashrc
+# ------------------------
+# Configuration du prompt
+# ------------------------
+# Prompt colors
+C_RED="\[\e[1;31m\]"
+C_GREEN="\[\e[1;32m\]"
+C_YELLOW="\[\e[1;33m\]"
+C_BLUE="\[\e[1;34m\]"
+C_MAGENTA="\[\e[1;35m\]"
+C_CYAN="\[\e[1;36m\]"
+C_WHITE="\[\e[1;37m\]"
+C_DEF="\[\033[0m\]"
 
-# Configuration du proxy HTTP
-export http_proxy="http://194.199.16.3:3128"
-export https_proxy="http://194.199.16.3:3128"
-export no_proxy="localhost,127.0.0.1,.local"
+# Mode root
+export PS1="${C_RED}\u@\h:${C_RED}\w${C_DEF} ${C_BLUE}#${C_DEF} "
+
+# Affichage des zones
+alias zones="firewall-cmd --list-all-zones | egrep -A50 \"external|dmz|home|public|work|internal|trusted\" --group-separator=\"-------------\""
+alias zones1="firewall-cmd --list-all-zones | less"
+alias services="systemctl list-unit-files --type=service --state=enabled"
+
+# You may uncomment the following lines if you want ls to be colorized:
+# export LS_OPTIONS="--color=auto"
+# eval "$(dircolors)"
+alias ls="ls \$LS_OPTIONS"
+alias ll="ls \$LS_OPTIONS -la"
+alias l="ls \$LS_OPTIONS -lA"
+alias vi="/usr/bin/vim \$*"
+
+# Some more aliases to avoid making mistakes:
+alias rm="rm -i"
+alias cp="cp -i"
+alias mv="mv -i"
+alias last="last -F"
+
+# Ajout de /snap/bin au PATH existant
+export PATH="/snap/bin:$PATH"
 EOF
-echo -e "\e[92mLa configuration du proxy HTTP a été ajoutée à /root/.bashrc.\e[0m"
+
+echo "\e[92mContenu ajouté avec succès à /root/.bashrc.\e[0m"
+# Sourcer .bashrc pour appliquer les modifications au shell actuel
+source /root/.bashrc
+
 
 # Vérification des services critiques
 echo -e "\e[94mVérification des services critiques :\e[0m"
-for service in sshd network firewalld snmpd; do
-    systemctl is-active --quiet "$service" && echo -e "\e[92mLe service $service est actif.\e[0m" || echo -e "\e[91mLe service $service n'est pas actif.\e[0m"
-done
-sleep 3
+# Vérifier que tous les services critiques sont en cours d’exécution
+systemctl list-units --type=service
 
 # Suppression history / Suppression lastlog
 echo -e "\e[94mSuppression de l'historique des commandes et des logs :\e[0m"
+# Vidage du contenu des fichiers de journalisation système
+> /var/log/wtmp
+> /var/log/lastlog
+# Suppression history
 history -c
-> ~/.bash_history
-truncate -s 0 /var/log/lastlog
 echo -e "\e[92mL'historique des commandes et les logs ont été supprimés.\e[0m"
 
+# Message de fin de script
+echo "********** Fin du script **********"
+sleep 2
 # Redémarrage du serveur
-echo -e "\e[94mRedémarrage du serveur...\e[0m"
+echo -e "\e[94m****** Redémarrage du serveur... ******\e[0m"
 sleep 3
 reboot
