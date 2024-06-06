@@ -28,7 +28,7 @@ fi
 # Demande à l'utilisateur de saisir le nouveau nom de la machine
 echo -e "\e[91mQuel est le nouveau nom complet de la machine ? (format = server1.dev.dsi.priv.sorbonne-universite.fr)\e[0m"
 read new_hostname
-echo "Le nom de la machine a été modifié avec succès en : $new_hostname"
+echo "Le nom de la machine a été modifié avec succès en : \e[91m$new_hostname\e[0m"
 
 # Modification du nom d'hôte
 echo "$new_hostname" | sudo tee /etc/hostname > /dev/null
