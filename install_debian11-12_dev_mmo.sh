@@ -194,6 +194,7 @@ systemctl status firewalld
 sleep 3
 
 #Création du compte esiansible SU
+echo -e "\e[94mAjout du compte esiansible Sorbonne Université :\e[0m"
 wget https://gitlab.dsi.sorbonne-universite.fr/cherigui/dsi-public/-/raw/main/mise_en_conformite_esiansible.sh
 bash mise_en_conformite_esiansible.sh
 
