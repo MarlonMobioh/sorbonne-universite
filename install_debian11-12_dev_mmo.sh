@@ -164,7 +164,7 @@ done
 
 # Ajouter la configuration de firewall (DEV)
 # Ajouter les services et ports nécessaires à la zone work, internal
-echo -e "\e[92mAjout des services et ports nécessaires Sorbonne Université\e[0m"
+echo -e "\e[94mAjout des services et ports nécessaires Sorbonne Université :\e[0m"
 sleep 3
 
 firewall-cmd --zone=work --add-service=ssh --permanent
@@ -189,7 +189,7 @@ firewall-cmd --zone=work --add-source=134.157.254.117 --permanent
 firewall-cmd --reload
 systemctl restart firewalld
 systemctl status firewalld
-echo -e "***\e[92mLe service firewalld a été redémarré.\e[0m***"
+echo -e "\e[92******\e[92mLe service firewalld a été redémarré.******\e[0m"
 sleep 3
 
 #Création du compte esiansible SU
@@ -213,6 +213,7 @@ sudo systemctl restart snmpd
 sudo systemctl status snmpd
 
 # Lister les ports en écoute
+echo -e "\e[94m[Liste des ports en écoute] - Résultat:\e[0m"
 ss -ulnp | grep 161
 sleep 3
 
@@ -230,6 +231,7 @@ systemctl status systemd-timesyncd
 sleep 3
 
 # Vérifier la synchronisation de l'horloge
+echo -e "\e[94m[Synchronisation de l'horloge] - Résultat:\e[0m"
 timedatectl
 sleep 3
 
