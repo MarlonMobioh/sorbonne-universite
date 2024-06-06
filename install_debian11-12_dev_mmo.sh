@@ -348,7 +348,7 @@ echo "[$(date '+%Y-%m-%d %H:%M:%S')] Le script $script_name été executé sur l
 sleep 3
 
 # Afficher un message de confirmation de la création du log
-echo -e "\e[92mLe log a été enregistré dans $log_file\e[0m"
+echo -e "\e[92mLog enregistré dans $log_file\e[0m"
 sleep 3
 
 # Message de fin de script
