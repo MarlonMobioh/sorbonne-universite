@@ -70,13 +70,11 @@ iface ens192 inet static
 
 # Redémarrer le service réseau pour appliquer les modifications
 systemctl restart networking
-#ifdown ens192
-#ifup ens192
-#ip link set ens192 up
-sleep 3
+systemctl status networking
 
 echo -e "\e[92mAdresse IP changée avec succès. Nouvelles valeurs : \e[0m"
 ip addr show ens192 | grep -w inet
+sleep 3
 
 # Déterminer l'adresse IP de la machine
 machine_ip=$(hostname -I | awk '{print $1}')
@@ -89,7 +87,8 @@ if ! grep -q "$machine_ip\s*$machine_hostname" /etc/hosts; then
     echo "L'adresse IP et/ou le nom d'hôte ne sont pas correctement définis dans /etc/hosts."
     echo "Ajout des entrées dans /etc/hosts..."
     echo "$machine_ip $machine_hostname" >> /etc/hosts
-    echo "Les entrées ont été ajoutées à /etc/hosts."
+    echo -e "\e[92mLes entrées ont été ajoutées à /etc/hosts.\e[0m"
+    sleep 3
 fi
 
 # Définition des utilisateurs dans un tableau avec leur mot de passe respectif
@@ -122,7 +121,7 @@ for user_pass in "${user_passwords[@]}"; do
 
         if ! user_in_sudo_group "$username"; then
             usermod -aG sudo "$username"
-            echo "Utilisateur $username ajouté au groupe sudo."
+            echo -e "\e[92mUtilisateur $username ajouté au groupe sudo.\e[0m"
         else
             echo "Utilisateur $username est déjà dans le groupe sudo. Ignorer l'ajout."
         fi
@@ -156,7 +155,7 @@ for user_home in /home/*; do
             touch "$authorized_keys_file"
             chmod 600 "$authorized_keys_file"
             chown "$username:$username" "$authorized_keys_file"
-            echo "Fichier $authorized_keys_file créé pour l'utilisateur $username."
+            echo -e "\e[92mFichier $authorized_keys_file créé pour l'utilisateur $username.\e[0m"
         else
             echo "Le fichier $authorized_keys_file existe déjà pour l'utilisateur $username. Ignorer."
         fi
@@ -164,32 +163,10 @@ for user_home in /home/*; do
 done
 
 # Ajouter la configuration de firewall (DEV)
-#firewall_config='<?xml version="1.0" encoding="utf-8"?>
-#<zone>
-#  <short>Work</short>
-#  <description>For use in work areas. You mostly trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.</description>
-#  <service name="ssh"/>
-#  <service name="http"/>
-#  <service name="https"/>
-#  <service name="cockpit"/>
-#  <source address="172.22.0.0/24"/>
-#  <source address="10.50.0.0/18"/>
-#  <source address="134.157.134.0/24"/>
-#  <source address="10.11.20.0/22"/>
-#  <source address="134.157.142.0/24"/>
-#  <source address="134.157.1.240/23"/>
-#  <source address="134.157.143.0/24"/>
-#  <source address="10.11.7.239"/>
-#  <source address="134.157.23.239"/>
-#  <source address="134.157.254.8"/>
-#  <source address="134.157.254.117"/> 
-#  <forward/>
-#</zone>'
+# Ajouter les services et ports nécessaires à la zone work, internal
+echo -e "\e[92mAjout des services et ports nécessaires Sorbonne Université\e[0m"
+sleep 3
 
-#echo "$firewall_config" > /etc/firewalld/zones/work.xml
-#echo "Configuration de firewall ajoutée dans work.xml."
-
-# Ajouter les services et ports nécessaires à la zone work + Ouvrir le port EON (supervision)
 firewall-cmd --zone=work --add-service=ssh --permanent
 firewall-cmd --zone=work --add-service=http --permanent
 firewall-cmd --zone=work --add-service=https --permanent
@@ -212,7 +189,7 @@ firewall-cmd --zone=work --add-source=134.157.254.117 --permanent
 firewall-cmd --reload
 systemctl restart firewalld
 systemctl status firewalld
-echo "*** Le service firewalld a été redémarré.***"
+echo -e "***\e[92mLe service firewalld a été redémarré.\e[0m***"
 sleep 3
 
 #Création du compte esiansible SU
@@ -221,7 +198,7 @@ bash mise_en_conformite_esiansible.sh
 
 # Récupérer l'adresse IP de l'interface ens192
 ip=$(ip -4 addr show dev ens192 | grep inet | awk '{print $2}' | cut -d'/' -f1)
-echo -e "\e[92mAdresse IP récupérée : $ip\e[0m"
+echo "Adresse IP récupérée : $ip"
 
 # Mettre à jour le fichier de configuration SNMP
 sudo sed -i "s/^agentaddress .*/agentaddress 127.0.0.1,\[::1\],udp:$ip:161/" /etc/snmp/snmpd.conf
@@ -339,6 +316,7 @@ export PATH="/snap/bin:$PATH"
 # Ajouter le contenu CONTENTBASHRCADD à la fin du fichier .bashrc
 echo "$CONTENTBASHRCADD" > /root/.bashrc
 echo -e "\e[92mContenu ajouté avec succès à /root/.bashrc.\e[0m"
+sleep 3
 
 # Charger les modifications du .bashrc
 source /root/.bashrc
