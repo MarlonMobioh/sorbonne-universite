@@ -28,7 +28,6 @@ fi
 # Demande à l'utilisateur de saisir le nouveau nom de la machine
 echo -e "\e[91mQuel est le nouveau nom complet de la machine ? (format = server1.dev.dsi.priv.sorbonne-universite.fr)\e[0m"
 read new_hostname
-echo "Le nom de la machine a été modifié avec succès en : \e[91m$new_hostname\e[0m"
 
 # Modification du nom d'hôte
 echo "$new_hostname" | sudo tee /etc/hostname > /dev/null
@@ -36,6 +35,8 @@ hostnamectl set-hostname "$new_hostname"
 
 # Redémarrer le service systemd-hostnamed pour appliquer les modifications
 systemctl restart systemd-hostnamed
+echo "Le nom de la machine a été modifié avec succès en : \e[91m$new_hostname\e[0m"
+sleep 3
 
 # Demander à l'utilisateur l'adresse IP, le masque de sous-réseau et la passerelle
 echo -e "\e[91mEntrez l'adresse IP : \e[0m" 
