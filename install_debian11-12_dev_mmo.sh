@@ -344,7 +344,7 @@ script_name=$(basename "$0")
 
 # Ajouter un fichier de log pour indiquer que le script a été exécuté
 log_file="/var/log/mmo.log"
-echo "[$(date '+%Y-%m-%d %H:%M:%S')] Le script $script_name été executé sur la machine : $new_hostname par $(whoami)" >> "$log_file"
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] Le script $script_name été executé sur la machine : $new_hostname par l'utilisateur, $(whoami)" >> "$log_file"
 sleep 3
 
 # Afficher un message de confirmation de la création du log
