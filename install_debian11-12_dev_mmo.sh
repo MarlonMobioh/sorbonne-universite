@@ -350,7 +350,7 @@ systemctl list-units --type=service
 
 # Régénérer les clef SSH du host
 rm -f /etc/ssh/ssh_host_* && dpkg-reconfigure openssh-server && \
-/etc/init.d/ssh restart
+systemctl restart ssh
 
 # Vidage du contenu des fichiers de journalisation système
 > /var/log/wtmp
