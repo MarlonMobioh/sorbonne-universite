@@ -241,6 +241,7 @@ dnf install -y postfix
 systemctl stop postfix
 systemctl disable postfix
 dnf install -y shellcheck
+dnf install -y fail2ban
 dnf install -y net-tools
 dnf install -y psmisc
 dnf install -y mailx mailutils s-nail
