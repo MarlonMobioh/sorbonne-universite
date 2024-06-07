@@ -2,15 +2,15 @@
 
 ##########################################################################################
 #                                        PROD
-# Ce script modifie les parametres suivants sur un serveur lors d'une installation Red Hat 9 :
+# Ce script modifie les parametres suivants sur un serveur lors d'une installation RedHat 8-9 :
 #
 # - Hostname
 # - Adressage IP [interface ens33]
 # - Création de l'ensemble des utilisateurs PEI ESI + esiansible
 # - Création des dossiers et du fichier authorized_keys des utilisateurs PEI ESI
 # - Ajout de la configuration du firewall (PROD)
-# - Configuration du fichier snmpd
-# - Configuration du serveur de temps "timedatectl"
+# - Configuration du fichier snmpd (à revoir)
+# - Configuration du serveur de temps
 # - Mise à jour des paquets [dnf update]
 # - Modification du /root/.bashrc
 # - Vérifier que tous les services critiques sont en cours d’exécution
@@ -26,7 +26,7 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 # Demande à l'utilisateur de saisir le nouveau nom de la machine
-echo -e "\e[91mQuel est le nouveau nom complet de la machine ? (format = server1.dev.dsi.priv.sorbonne-universite.fr)\e[0m"
+echo -e "\e[91mQuel est le nouveau nom complet de la machine ? (format = server1.prod.dsi.sorbonne-universite.fr)\e[0m"
 read new_hostname
 
 # Demander à l'utilisateur l'adresse IP, le masque de sous-réseau et la passerelle
@@ -93,7 +93,7 @@ user_passwords=(
     "fegard:@EoVqEL12378"
 )
 
-# Fonction pour vérifier l'appartenance d'un utilisateur au groupe wheel (équivalent sudo sur Red Hat)
+# Fonction pour vérifier l'appartenance d'un utilisateur au groupe wheel (équivalent sudo sur RedHat)
 user_in_wheel_group() {
     local username="$1"
     groups "$username" | grep -q "\bwheel\b"
@@ -154,7 +154,7 @@ for user_home in /home/*; do
     fi
 done
 
-# Ajouter la configuration de firewall (DEV)
+# Ajouter la configuration de firewall (PROD)
 # Ajouter les services et ports nécessaires à la zone work, internal
 echo -e "\e[94mAjout des services et ports nécessaires Sorbonne Université :\e[0m"
 sleep 2
@@ -174,7 +174,6 @@ firewall-cmd --zone=work --add-source=134.157.126.0/24 --permanent
 firewall-cmd --zone=work --add-source=134.157.142.0/24 --permanent
 firewall-cmd --zone=work --add-source=134.157.1.240/23 --permanent
 firewall-cmd --zone=work --add-source=134.157.143.0/24 --permanent
-firewall-cmd --zone=work --add-source=10.11.7.239 --permanent
 firewall-cmd --zone=work --add-source=134.157.23.239 --permanent
 firewall-cmd --zone=work --add-source=134.157.254.8 --permanent
 firewall-cmd --zone=work --add-source=134.157.1.128 --permanent
@@ -191,6 +190,7 @@ echo -e "\e[94mAjout du compte esiansible Sorbonne Université :\e[0m"
 wget https://gitlab.dsi.sorbonne-universite.fr/cherigui/dsi-public/-/raw/main/mise_en_conformite_esiansible.sh
 bash mise_en_conformite_esiansible.sh
 echo -e "\e[92mL'utilisateur esiansible a été ajouté.\e[0m"
+sleep 2
 
 # Installation des paquets necessaires SNMP
 dnf install -y net-snmp net-snmp-libs net-snmp-utils
@@ -205,21 +205,21 @@ echo -e "\e[94mConfiguration du serveur de temps :\e[0m"
 cp /etc/chrony.conf /etc/chrony.conf.old
 # Modifier /etc/chrony.conf pour utiliser la passerelle comme serveur NTP
 sed -i "s/^pool /#pool /" /etc/chrony.conf
-echo "server 134.157.254.19 iburst" >> /etc/chrony.conf
+echo "server 134.157.23.254 iburst" >> /etc/chrony.conf
 # Redémarrer le service chronyd pour appliquer les modifications
 systemctl restart chronyd
 # Vérifier le statut du service chronyd
 systemctl status chronyd
-echo "\e[92m*** Le service chronyd a été redémarré.***\e[0m"
+echo -e "\e[92m*** Le service chronyd a été redémarré.***\e[0m"
 echo "*** Waiting 5 sec ... ***"
 sleep 5
 # Vérifier la synchronisation de l'horloge
 timedatectl
 sleep 3
-echo "\e[92mConfiguration de chronyd avec l'adresse IP 134.157.254.19 (ntp1.jussieu.fr) effectuée.\e[0m"
+echo "\e[92mConfiguration de chronyd avec l'adresse IP 134.157.23.254 (r-v46.reseau.jussieu.fr) effectuée.\e[0m"
 
 # Enregistrement dans RedHat (mmobioh ; Sorbonne@2023)
-echo "Enregistrement dans RedHat :"
+echo -e "\e[94mEnregistrement dans RedHat :\e[0m"
 echo "Nettoyage des informations d'inscription précédentes"
 subscription-manager clean
 echo "Enregistrement de l'utilisateur [mmobioh]"
@@ -228,7 +228,7 @@ echo "Affichage de la liste des abonnements disponibles"
 subscription-manager list --available
 echo "Attachement de l'abonnement spécifique identifié par le code de pool 8a85f99977b0c0420177f2a086211111s"
 subscription-manager attach --pool=8a85f99977b0c0420177f2a086211111
-echo "*** Abonnement Redhat 8a85f99977b0c0420177f2a086211111 attaché ***"
+echo "\e[94m*** Abonnement Redhat 8a85f99977b0c0420177f2a086211111 attaché ***\e[92m"
 sleep 3
 
 # Mise à jour des paquets [dnf update]
@@ -305,7 +305,6 @@ EOF
 echo "\e[92mContenu ajouté avec succès à /root/.bashrc.\e[0m"
 # Sourcer .bashrc pour appliquer les modifications au shell actuel
 source /root/.bashrc
-
 
 # Vérification des services critiques
 echo -e "\e[94mVérification des services critiques :\e[0m"
