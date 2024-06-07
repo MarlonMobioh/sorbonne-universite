@@ -168,12 +168,10 @@ firewall-cmd --zone=internal --add-source=134.157.254.117 --permanent
 firewall-cmd --zone=work --add-source=172.22.0.0/24 --permanent
 firewall-cmd --zone=work --add-source=10.50.0.0/18 --permanent
 firewall-cmd --zone=work --add-source=134.157.134.0/24 --permanent
-firewall-cmd --zone=work --add-source=10.11.20.0/22 --permanent
 firewall-cmd --zone=work --add-source=134.157.142.0/24 --permanent
 firewall-cmd --zone=work --add-source=134.157.1.240/23 --permanent
 firewall-cmd --zone=work --add-source=134.157.143.0/24 --permanent
 firewall-cmd --zone=work --add-source=10.11.7.239 --permanent
-firewall-cmd --zone=work --add-source=134.157.23.239 --permanent
 firewall-cmd --zone=work --add-source=134.157.254.8 --permanent
 firewall-cmd --zone=work --add-source=134.157.254.117 --permanent
 
@@ -189,6 +187,7 @@ echo -e "\e[94mAjout du compte esiansible Sorbonne Université :\e[0m"
 wget https://gitlab.dsi.sorbonne-universite.fr/cherigui/dsi-public/-/raw/main/mise_en_conformite_esiansible.sh
 bash mise_en_conformite_esiansible.sh
 echo -e "\e[92mL'utilisateur esiansible a été ajouté.\e[0m"
+sleep 2
 
 # Installation des paquets necessaires SNMP
 dnf install -y net-snmp net-snmp-libs net-snmp-utils
@@ -208,7 +207,7 @@ echo "server 134.157.254.19 iburst" >> /etc/chrony.conf
 systemctl restart chronyd
 # Vérifier le statut du service chronyd
 systemctl status chronyd
-echo "\e[92m*** Le service chronyd a été redémarré.***\e[0m"
+echo -e "\e[92m*** Le service chronyd a été redémarré.***\e[0m"
 echo "*** Waiting 5 sec ... ***"
 sleep 5
 # Vérifier la synchronisation de l'horloge
@@ -217,7 +216,7 @@ sleep 3
 echo "\e[92mConfiguration de chronyd avec l'adresse IP 134.157.254.19 (ntp1.jussieu.fr) effectuée.\e[0m"
 
 # Enregistrement dans RedHat (mmobioh ; Sorbonne@2023)
-echo "Enregistrement dans RedHat :"
+echo -e "\e[94mEnregistrement dans RedHat :\e[0m"
 echo "Nettoyage des informations d'inscription précédentes"
 subscription-manager clean
 echo "Enregistrement de l'utilisateur [mmobioh]"
@@ -226,7 +225,7 @@ echo "Affichage de la liste des abonnements disponibles"
 subscription-manager list --available
 echo "Attachement de l'abonnement spécifique identifié par le code de pool 8a85f99977b0c0420177f2a086211111s"
 subscription-manager attach --pool=8a85f99977b0c0420177f2a086211111
-echo "*** Abonnement Redhat 8a85f99977b0c0420177f2a086211111 attaché ***"
+echo "\e[94m*** Abonnement Redhat 8a85f99977b0c0420177f2a086211111 attaché ***\e[92m"
 sleep 3
 
 # Mise à jour des paquets [dnf update]
@@ -303,7 +302,6 @@ EOF
 echo "\e[92mContenu ajouté avec succès à /root/.bashrc.\e[0m"
 # Sourcer .bashrc pour appliquer les modifications au shell actuel
 source /root/.bashrc
-
 
 # Vérification des services critiques
 echo -e "\e[94mVérification des services critiques :\e[0m"
