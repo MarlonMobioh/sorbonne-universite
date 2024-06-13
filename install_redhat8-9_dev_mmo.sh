@@ -221,11 +221,11 @@ echo "Nettoyage des informations d'inscription précédentes"
 subscription-manager clean
 echo "Enregistrement de l'utilisateur [mmobioh]"
 subscription-manager register --username=mmobioh --password=Sorbonne@2023
-echo "Affichage de la liste des abonnements disponibles"
-subscription-manager list --available
+#echo "Affichage de la liste des abonnements disponibles"
+#subscription-manager list --available
 echo "Attachement de l'abonnement spécifique identifié par le code de pool 8a85f99977b0c0420177f2a086211111s"
 subscription-manager attach --pool=8a85f99977b0c0420177f2a086211111
-echo "\e[94m*** Abonnement Redhat 8a85f99977b0c0420177f2a086211111 attaché ***\e[92m"
+echo "\e[92m *** Abonnement Redhat 8a85f99977b0c0420177f2a086211111 attaché *** \e[0m"
 sleep 3
 
 # Mise à jour des paquets [dnf update]
