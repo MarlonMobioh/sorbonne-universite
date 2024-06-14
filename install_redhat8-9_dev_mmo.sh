@@ -313,17 +313,29 @@ echo -e "\e[92mL'historique des commandes et les logs ont été supprimés.\e[0m
 
 # Nom du script
 script_name=$(basename "$0")
+
 # Fichier de log
-log_file="/var/log/mmo.log"
+log_file="/var/log/mmo-scriptfirstboot.log"
+
+# Vérifier si le fichier de log existe, sinon le créer avec les bonnes permissions
+if [ ! -f "$log_file" ]; then
+    sudo touch "$log_file"
+    sudo chmod 664 "$log_file"  # Donner des permissions d'écriture au propriétaire et au groupe
+    sudo chown root:adm "$log_file"  # Assigner le propriétaire à root et le groupe à adm (ou un autre groupe approprié)
+fi
+
 # Vérifier si le fichier de log est accessible en écriture
 if [ ! -w "$log_file" ]; then
     echo "Erreur: le fichier de log $log_file n'est pas accessible en écriture."
     exit 1
 fi
+
 # Ajouter une entrée de log indiquant que le script a été exécuté
 {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] Le script $script_name a été exécuté sur la machine : $(hostname) par l'utilisateur $(whoami)."
 } >> "$log_file"
+
+# Attendre 3 secondes
 sleep 3
 
 # Message de fin de script
