@@ -31,38 +31,28 @@ echo -e "\e[91mQuel est le nouveau nom complet de la machine ? (format = server1
 read new_hostname
 
 # Demander à l'utilisateur l'adresse IP, le masque de sous-réseau et la passerelle
-echo -e "\e[91mEntrez l'adresse IP : \e[0m"
+echo -e "\e[91mEntrez l'adresse IP (ex: 192.168.1.100) : \e[0m"
 read ip_address
-echo -e "\e[91mEntrez le masque de sous-réseau : \e[0m"
+echo -e "\e[91mEntrez le masque de sous-réseau (ex: 22 pour 255.255.252.0) : \e[0m"
 read subnet_mask
 echo -e "\e[91mEntrez la passerelle par défaut : \e[0m"
 read gateway
 
-# Modifier le fichier /etc/sysconfig/network-scripts/ifcfg-ens33 avec les nouvelles valeurs
-cat <<EOF > /etc/sysconfig/network-scripts/ifcfg-ens33
-TYPE=Ethernet
-BOOTPROTO=none
-DEFROUTE=yes
-IPV4_FAILURE_FATAL=no
-IPV6INIT=yes
-IPV6_AUTOCONF=yes
-IPV6_DEFROUTE=yes
-IPV6_FAILURE_FATAL=no
-NAME=ens33
-DEVICE=ens33
-ONBOOT=yes
-IPADDR=$ip_address
-NETMASK=$subnet_mask
-GATEWAY=$gateway
-DNS1=134.157.0.129
-DNS2=134.157.192.1
-EOF
+# Déterminer le nom de l'interface (remplacez "ens33" par le nom réel de votre interface si différent)
+interface="ens33"
+
+# Modifier la connexion avec nmcli
+sudo nmcli connection modify $interface ipv4.addresses "${ip_address}/${subnet_mask}"
+sudo nmcli connection modify $interface ipv4.gateway "${gateway}"
+sudo nmcli connection modify $interface ipv4.method manual
+sudo nmcli connection modify $interface ipv4.dns "134.157.0.129 134.157.192.1"
 
 # Redémarrer l'interface réseau pour appliquer les modifications
-nmcli connection reload
+sudo nmcli connection down $interface && sudo nmcli connection up $interface
 
+# Afficher les nouvelles valeurs
 echo -e "\e[92mAdresse IP changée avec succès. Nouvelles valeurs : \e[0m"
-ip addr show ens33 | grep -w inet
+ip addr show $interface | grep -w inet
 sleep 3
 
 # Modification du nom d'hôte
