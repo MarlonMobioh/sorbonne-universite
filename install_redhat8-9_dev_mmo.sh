@@ -206,7 +206,7 @@ sleep 5
 # Vérifier la synchronisation de l'horloge
 timedatectl
 sleep 3
-echo "\e[92mConfiguration de chronyd avec l'adresse IP 134.157.254.19 (ntp1.jussieu.fr) effectuée.\e[0m"
+echo -e "\e[92mConfiguration de chronyd avec l'adresse IP 134.157.254.19 (ntp1.jussieu.fr) effectuée.\e[0m"
 
 # Enregistrement dans RedHat (mmobioh ; Sorbonne@2023)
 echo -e "\e[94mEnregistrement dans RedHat :\e[0m"
