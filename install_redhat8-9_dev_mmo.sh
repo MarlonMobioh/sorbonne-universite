@@ -31,7 +31,7 @@ echo -e "\e[91mQuel est le nouveau nom complet de la machine ? (format = server1
 read new_hostname
 
 # Demander à l'utilisateur l'adresse IP, le masque de sous-réseau et la passerelle
-echo -e "\e[91mEntrez l'adresse IP (ex: 192.168.1.100) : \e[0m"
+echo -e "\e[91mEntrez l'adresse IP : \e[0m"
 read ip_address
 echo -e "\e[91mEntrez le masque de sous-réseau (ex: 22 pour 255.255.252.0) : \e[0m"
 read subnet_mask
