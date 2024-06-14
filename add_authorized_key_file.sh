@@ -23,7 +23,7 @@ for user_home in /home/*; do
                 touch "$authorized_keys_file"
                 chmod 600 "$authorized_keys_file"
                 chown "$username:$username" "$authorized_keys_file"
-                echo "Fichier $authorized_keys_file créé pour l'utilisateur $username."
+                echo -e "\e[92mFichier $authorized_keys_file créé pour l'utilisateur $username.\e[0m"
             fi
         else
             # Si le dossier .ssh n'existe pas, le créer
@@ -36,7 +36,7 @@ for user_home in /home/*; do
             touch "$authorized_keys_file"
             chmod 600 "$authorized_keys_file"
             chown "$username:$username" "$authorized_keys_file"
-            echo "Fichier $authorized_keys_file créé pour l'utilisateur $username."
+            echo -e "\e[92mFichier $authorized_keys_file créé pour l'utilisateur $username.\e[0m"
         fi
     fi
 done
