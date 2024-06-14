@@ -321,7 +321,7 @@ log_file="/var/log/mmo-scriptfirstboot.log"
 if [ ! -f "$log_file" ]; then
     sudo touch "$log_file"
     sudo chmod 664 "$log_file"  # Donner des permissions d'écriture au propriétaire et au groupe
-    sudo chown root:adm "$log_file"  # Assigner le propriétaire à root et le groupe à adm (ou un autre groupe approprié)
+    sudo chown root:root "$log_file"  # Assigner le propriétaire à root et le groupe à adm (ou un autre groupe approprié)
 fi
 
 # Vérifier si le fichier de log est accessible en écriture
