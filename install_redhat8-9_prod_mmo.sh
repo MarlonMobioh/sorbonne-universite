@@ -321,6 +321,21 @@ echo -e "\e[94mSuppression de l'historique des commandes et des logs :\e[0m"
 history -c
 echo -e "\e[92mL'historique des commandes et les logs ont été supprimés.\e[0m"
 
+# Nom du script
+script_name=$(basename "$0")
+# Fichier de log
+log_file="/var/log/mmo.log"
+# Vérifier si le fichier de log est accessible en écriture
+if [ ! -w "$log_file" ]; then
+    echo "Erreur: le fichier de log $log_file n'est pas accessible en écriture."
+    exit 1
+fi
+# Ajouter une entrée de log indiquant que le script a été exécuté
+{
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] Le script $script_name a été exécuté sur la machine : $(hostname) par l'utilisateur $(whoami)."
+} >> "$log_file"
+sleep 3
+
 # Message de fin de script
 echo "********** Fin du script **********"
 sleep 2
