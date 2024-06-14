@@ -15,7 +15,7 @@
 # - Modification du /root/.bashrc
 # - Vérifier que tous les services critiques sont en cours d’exécution
 # - Suppression history / Suppression lastlog
-# - Renseignement dans fichier de log mmo.log
+# - Renseignement dans fichier de log mmo-scriptfirstboot.log
 # - Redémarrage du serveur
 #
 ##########################################################################################
