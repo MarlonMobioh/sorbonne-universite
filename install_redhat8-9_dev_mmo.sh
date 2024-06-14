@@ -198,6 +198,8 @@ echo "server 134.157.254.19 iburst" >> /etc/chrony.conf
 systemctl restart chronyd
 # Vérifier le statut du service chronyd
 systemctl status chronyd
+sleep 2
+
 echo -e "\e[92m*** Le service chronyd a été redémarré.***\e[0m"
 echo "*** Waiting 5 sec ... ***"
 sleep 5
@@ -216,7 +218,7 @@ subscription-manager register --username=mmobioh --password=Sorbonne@2023
 #subscription-manager list --available
 echo "Attachement de l'abonnement spécifique identifié par le code de pool 8a85f99977b0c0420177f2a086211111s"
 subscription-manager attach --pool=8a85f99977b0c0420177f2a086211111
-echo "\e[92m *** Abonnement Redhat 8a85f99977b0c0420177f2a086211111 attaché *** \e[0m"
+echo -e "\e[92m*** Abonnement Redhat 8a85f99977b0c0420177f2a086211111 attaché ***\e[0m"
 sleep 3
 
 # Mise à jour des paquets [dnf update]
