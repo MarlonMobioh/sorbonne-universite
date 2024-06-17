@@ -17,7 +17,7 @@ for user_home in /home/*; do
 
             # Vérifier si le fichier authorized_keys existe déjà
             if [ -f "$authorized_keys_file" ]; then
-                echo "Le fichier $authorized_keys_file existe déjà pour l'utilisateur $username. Ignorer."
+                echo -e "\e[91mLe fichier $authorized_keys_file existe déjà pour l'utilisateur $username. Ignorer.\e[0m"
             else
                 # Créer un fichier authorized_keys vide
                 touch "$authorized_keys_file"
@@ -41,7 +41,7 @@ for user_home in /home/*; do
     fi
 done
 
-echo "********* FIN DU SCRIPT *********"
+echo -e "\e[94m********* FIN DU SCRIPT *********\e[0m"
 sleep 1
 
 # Commandes standards :
