@@ -6,58 +6,8 @@ on:
       - main
 
 jobs:
-  build-redhat:
-    runs-on: centos-8
-    env:
-      ADMIN_PASSWORD_MMO: ${{ secrets.admin_password_mmo }}
-      ADMIN_PASSWORD_MBO: ${{ secrets.admin_password_mbo }}
-      ADMIN_PASSWORD_CLC: ${{ secrets.admin_password_clc }}
-      ADMIN_PASSWORD_OMO: ${{ secrets.admin_password_omo }}
-      ADMIN_PASSWORD_MCH: ${{ secrets.admin_password_mch }}
-      ADMIN_PASSWORD_FFE: ${{ secrets.admin_password_ffe }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Debugging - Display secrets
-        run: |
-          echo "Admin password for MMO: $ADMIN_PASSWORD_MMO"
-          echo "Admin password for MBO: $ADMIN_PASSWORD_MBO"
-          echo "Admin password for CLC: $ADMIN_PASSWORD_CLC"
-          echo "Admin password for OMO: $ADMIN_PASSWORD_OMO"
-          echo "Admin password for MCH: $ADMIN_PASSWORD_MCH"
-          echo "Admin password for FFE: $ADMIN_PASSWORD_FFE"
-
-      - name: Execute script
-        run: bash test.sh
-
-  build-debian-11:
-    runs-on: ubuntu-20.04
-    env:
-      ADMIN_PASSWORD_MMO: ${{ secrets.admin_password_mmo }}
-      ADMIN_PASSWORD_MBO: ${{ secrets.admin_password_mbo }}
-      ADMIN_PASSWORD_CLC: ${{ secrets.admin_password_clc }}
-      ADMIN_PASSWORD_OMO: ${{ secrets.admin_password_omo }}
-      ADMIN_PASSWORD_MCH: ${{ secrets.admin_password_mch }}
-      ADMIN_PASSWORD_FFE: ${{ secrets.admin_password_ffe }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Debugging - Display secrets
-        run: |
-          echo "Admin password for MMO: $ADMIN_PASSWORD_MMO"
-          echo "Admin password for MBO: $ADMIN_PASSWORD_MBO"
-          echo "Admin password for CLC: $ADMIN_PASSWORD_CLC"
-          echo "Admin password for OMO: $ADMIN_PASSWORD_OMO"
-          echo "Admin password for MCH: $ADMIN_PASSWORD_MCH"
-          echo "Admin password for FFE: $ADMIN_PASSWORD_FFE"
-
-      - name: Execute script
-        run: bash test.sh
-
-  build-debian-12:
-    runs-on: ubuntu-22.04
+  build-linux:
+    runs-on: ubuntu-latest
     env:
       ADMIN_PASSWORD_MMO: ${{ secrets.admin_password_mmo }}
       ADMIN_PASSWORD_MBO: ${{ secrets.admin_password_mbo }}
