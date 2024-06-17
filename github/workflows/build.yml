@@ -29,6 +29,9 @@ jobs:
           echo "Admin password for Red Hat 9 (CentOS 8) - OMO: $ADMIN_PASSWORD_OMO"
           # Utiliser $ADMIN_PASSWORD_MMO, etc... dans les commandes pour CentOS 8
 
+      - name: Execute script
+        run: bash test.sh
+        
 #  build-debian-11:
 #    runs-on: ubuntu-20.04
 #    env:
