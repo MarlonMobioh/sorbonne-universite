@@ -324,7 +324,7 @@ apt install -y unzip
 apt install -y telnet 
 apt install -y lsof
 apt install -y vim
-apt install -y ccze mc tmux rsync htop net-tools dnsutils
+apt install -y ccze mc tmux rsync htop net-tools dnsutils git
 
 echo -e "\e[94mModification du fichier /root/.bashrc Sorbonne Université :\e[0m"
 sleep 2
