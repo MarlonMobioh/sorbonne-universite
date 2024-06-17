@@ -21,8 +21,13 @@ jobs:
 
       - name: Build and Test on CentOS 8 (Red Hat 9)
         run: |
-          echo "Building and testing on CentOS 8 (similar to Red Hat 9)"
-          # Commandes spécifiques à CentOS / RHEL
+          echo "Admin password for Red Hat 9 (CentOS 8) - MMO: $ADMIN_PASSWORD_MMO"
+          echo "Admin password for Red Hat 9 (CentOS 8) - CLC: $ADMIN_PASSWORD_CLC"
+          echo "Admin password for Red Hat 9 (CentOS 8) - FFE: $ADMIN_PASSWORD_FFE"
+          echo "Admin password for Red Hat 9 (CentOS 8) - MBO: $ADMIN_PASSWORD_MBO"
+          echo "Admin password for Red Hat 9 (CentOS 8) - MCH: $ADMIN_PASSWORD_MCH"
+          echo "Admin password for Red Hat 9 (CentOS 8) - OMO: $ADMIN_PASSWORD_OMO"
+          # Utiliser $ADMIN_PASSWORD_MMO, etc... dans les commandes pour CentOS 8
 
   build-debian-11:
     runs-on: ubuntu-20.04
@@ -39,8 +44,13 @@ jobs:
 
       - name: Build and Test on Ubuntu 20.04 (Debian 11)
         run: |
-          echo "Building and testing on Ubuntu 20.04 (similar to Debian 11)"
-          # Commandes spécifiques à Debian 11 / Ubuntu
+          echo "Admin password for Red Hat 9 (CentOS 8) - MMO: $ADMIN_PASSWORD_MMO"
+          echo "Admin password for Red Hat 9 (CentOS 8) - CLC: $ADMIN_PASSWORD_CLC"
+          echo "Admin password for Red Hat 9 (CentOS 8) - FFE: $ADMIN_PASSWORD_FFE"
+          echo "Admin password for Red Hat 9 (CentOS 8) - MBO: $ADMIN_PASSWORD_MBO"
+          echo "Admin password for Red Hat 9 (CentOS 8) - MCH: $ADMIN_PASSWORD_MCH"
+          echo "Admin password for Red Hat 9 (CentOS 8) - OMO: $ADMIN_PASSWORD_OMO"
+          # Utiliser $ADMIN_PASSWORD_MMO, etc... Dans les commandes spécifiques à Debian 11 / Ubuntu
 
   build-debian-12:
     runs-on: ubuntu-22.04
@@ -57,5 +67,10 @@ jobs:
 
       - name: Build and Test on Ubuntu 22.04 (Debian 12)
         run: |
-          echo "Building and testing on Ubuntu 22.04 (similar to Debian 12)"
-          # Commandes spécifiques à Debian 12 / Ubuntu
+          echo "Admin password for Red Hat 9 (CentOS 8) - MMO: $ADMIN_PASSWORD_MMO"
+          echo "Admin password for Red Hat 9 (CentOS 8) - CLC: $ADMIN_PASSWORD_CLC"
+          echo "Admin password for Red Hat 9 (CentOS 8) - FFE: $ADMIN_PASSWORD_FFE"
+          echo "Admin password for Red Hat 9 (CentOS 8) - MBO: $ADMIN_PASSWORD_MBO"
+          echo "Admin password for Red Hat 9 (CentOS 8) - MCH: $ADMIN_PASSWORD_MCH"
+          echo "Admin password for Red Hat 9 (CentOS 8) - OMO: $ADMIN_PASSWORD_OMO"
+          # Utiliser $ADMIN_PASSWORD_MMO, etc... Dans les commandes spécifiques à Debian 12 / Ubuntu
