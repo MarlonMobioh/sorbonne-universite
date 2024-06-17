@@ -111,6 +111,51 @@ for user_pass in "${user_passwords[@]}"; do
     fi
 done
 
+# Demander à l'utilisateur s'il y a de nouveaux comptes à créer
+read -p "Y a-t-il des nouveaux comptes à créer ? (oui/non) " response
+
+if [[ "$response" == "oui" ]]; then
+    while true; do
+        read -p "Entrez le nom du nouvel utilisateur : " new_username
+        if id "$new_username" &>/dev/null; then
+            echo -e "\e[91mL'utilisateur $new_username existe déjà. Veuillez choisir un autre nom.\e[0m"
+            continue
+        fi
+
+        while true; do
+            read -s -p "Entrez le mot de passe pour $new_username : " new_password
+            echo
+            read -s -p "Confirmez le mot de passe pour $new_username : " confirm_password
+            echo
+            if [[ "$new_password" == "$confirm_password" ]]; then
+                break
+            else
+                echo -e "\e[91mLes mots de passe ne correspondent pas. Veuillez réessayer.\e[0m"
+            fi
+        done
+
+        useradd -m -s /bin/bash "$new_username"
+        echo "$new_username:$new_password" | chpasswd
+        echo "Utilisateur $new_username créé avec le mot de passe fourni."
+
+        if ! user_in_wheel_group "$new_username"; then
+            usermod -aG wheel "$new_username"
+            echo -e "\e[91mUtilisateur $new_username ajouté au groupe wheel.\e[0m"
+        else
+            echo -e "\e[91mUtilisateur $new_username est déjà dans le groupe wheel. Ignorer l'ajout.\e[0m"
+        fi
+
+        read -p "Souhaitez-vous créer un autre compte ? (oui/non) " another_response
+        if [[ "$another_response" != "oui" ]]; then
+            break
+        fi
+    done
+else
+    echo "Aucun nouveau compte ne sera créé."
+fi
+sleep 2
+
+
 # Parcourir tous les répertoires utilisateur sous /home
 for user_home in /home/*; do
     if [ -d "$user_home" ]; then
@@ -140,7 +185,7 @@ for user_home in /home/*; do
             chown "$username:$username" "$authorized_keys_file"
             echo -e "\e[92mFichier $authorized_keys_file créé pour l'utilisateur $username.\e[0m"
         else
-            echo "Le fichier $authorized_keys_file existe déjà pour l'utilisateur $username. Ignorer."
+            echo -e "\e[91mLe fichier $authorized_keys_file existe déjà pour l'utilisateur $username. Ignorer.\e[0m"
         fi
     fi
 done
