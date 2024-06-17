@@ -3,12 +3,12 @@
 
 # Définition des utilisateurs dans un tableau avec leur mot de passe respectif
 user_passwords=(
-    "admin.ava6.mobioh:${ADMIN_PASSWORD_MMO}"
-    "mejdi:${ADMIN_PASSWORD_MBO}"
-    "lechaffotec:${ADMIN_PASSWORD_CLC}"
-    "morelle:${ADMIN_PASSWORD_OMO}"
-    "cherigui:${ADMIN_PASSWORD_MCH}"
-    "fegard:${ADMIN_PASSWORD_FFE}"
+    "admin.ava6.mobioh:$ADMIN_PASSWORD_MMO"
+    "mejdi:$ADMIN_PASSWORD_MBO"
+    "lechaffotec:$ADMIN_PASSWORD_CLC"
+    "morelle:$ADMIN_PASSWORD_OMO"
+    "cherigui:$ADMIN_PASSWORD_MCH"
+    "fegard:$ADMIN_PASSWORD_FFE"
 )
 
 # Fonction pour vérifier l'appartenance d'un utilisateur au groupe sudo
