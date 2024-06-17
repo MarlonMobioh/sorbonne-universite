@@ -368,7 +368,7 @@ apt install -y unzip
 apt install -y telnet 
 apt install -y lsof
 apt install -y vim
-apt install -y ccze mc tmux rsync htop net-tools dnsutils
+apt install -y ccze mc tmux rsync htop net-tools dnsutils git
 
 # Modification du /root/.bashrc
 # Default prompt en cas de problème :
