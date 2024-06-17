@@ -1,0 +1,40 @@
+name: Multi-platform Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-redhat:
+    runs-on: centos-8
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Build and Test on CentOS 8 (Red Hat 9)
+        run: |
+          echo "Building and testing on CentOS 8 (similar to Red Hat 9)"
+          # Commandes spécifiques à CentOS / RHEL
+
+  build-debian-11:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Build and Test on Ubuntu 20.04 (Debian 11)
+        run: |
+          echo "Building and testing on Ubuntu 20.04 (similar to Debian 11)"
+          # Commandes spécifiques à Debian 11 / Ubuntu
+
+  build-debian-12:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Build and Test on Ubuntu 22.04 (Debian 12)
+        run: |
+          echo "Building and testing on Ubuntu 22.04 (similar to Debian 12)"
+          # Commandes spécifiques à Debian 12 / Ubuntu
