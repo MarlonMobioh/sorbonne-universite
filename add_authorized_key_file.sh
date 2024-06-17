@@ -41,6 +41,9 @@ for user_home in /home/*; do
     fi
 done
 
+echo "********* FIN DU SCRIPT *********"
+sleep 1
+
 # Commandes standards :
 #
 # mkdir /home/USER/.ssh
