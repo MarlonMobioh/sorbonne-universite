@@ -8,6 +8,10 @@ on:
 jobs:
   build-redhat:
     runs-on: centos-8
+        env:
+      ADMIN_PASSWORD_MMO: ${{ secrets.admin_password_mmo }}
+      ADMIN_PASSWORD_MMA: ${{ secrets.admin_password_mma }}
+      ADMIN_PASSWORD_MME: ${{ secrets.admin_password_mme }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -19,6 +23,10 @@ jobs:
 
   build-debian-11:
     runs-on: ubuntu-20.04
+        env:
+      ADMIN_PASSWORD_MMO: ${{ secrets.admin_password_mmo }}
+      ADMIN_PASSWORD_MMA: ${{ secrets.admin_password_mma }}
+      ADMIN_PASSWORD_MME: ${{ secrets.admin_password_mme }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -30,6 +38,10 @@ jobs:
 
   build-debian-12:
     runs-on: ubuntu-22.04
+        env:
+      ADMIN_PASSWORD_MMO: ${{ secrets.admin_password_mmo }}
+      ADMIN_PASSWORD_MMA: ${{ secrets.admin_password_mma }}
+      ADMIN_PASSWORD_MME: ${{ secrets.admin_password_mme }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
