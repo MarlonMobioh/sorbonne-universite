@@ -130,8 +130,6 @@ for user_pass in "${user_passwords[@]}"; do
     fi
 done
 
-#!/bin/bash
-
 # Fonction pour vérifier si un utilisateur est dans le groupe sudo
 user_in_sudo_group() {
     id -nG "$1" | grep -qw "sudo"
