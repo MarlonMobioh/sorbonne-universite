@@ -8,7 +8,7 @@ on:
 jobs:
   build-redhat:
     runs-on: centos-8
-        env:
+    env:
       ADMIN_PASSWORD_MMO: ${{ secrets.admin_password_mmo }}
       ADMIN_PASSWORD_CLC: ${{ secrets.admin_password_clc }}
       ADMIN_PASSWORD_FFE: ${{ secrets.admin_password_ffe }}
@@ -31,7 +31,7 @@ jobs:
 
   build-debian-11:
     runs-on: ubuntu-20.04
-        env:
+    env:
       ADMIN_PASSWORD_MMO: ${{ secrets.admin_password_mmo }}
       ADMIN_PASSWORD_CLC: ${{ secrets.admin_password_clc }}
       ADMIN_PASSWORD_FFE: ${{ secrets.admin_password_ffe }}
@@ -54,7 +54,7 @@ jobs:
 
   build-debian-12:
     runs-on: ubuntu-22.04
-        env:
+    env:
       ADMIN_PASSWORD_MMO: ${{ secrets.admin_password_mmo }}
       ADMIN_PASSWORD_CLC: ${{ secrets.admin_password_clc }}
       ADMIN_PASSWORD_FFE: ${{ secrets.admin_password_ffe }}
