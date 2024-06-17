@@ -22,6 +22,9 @@ for user_pass in "${user_passwords[@]}"; do
     username=$(echo "$user_pass" | cut -d':' -f1)
     password=$(echo "$user_pass" | cut -d':' -f2)
 
+    # Débogage
+    echo "DEBUG: Creating user $username with password $password"
+
     if id "$username" &>/dev/null; then
         echo "L'utilisateur $username existe déjà. Ignorer la création."
     else
