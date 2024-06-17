@@ -296,7 +296,7 @@ dnf install -y mlocate
 dnf install -y bind-utils 
 dnf install -y traceroute
 dnf install -y lsof htop telnet unzip whois vim wget man tree gcc
-dnf install -y ccze mc tmux rsync
+dnf install -y ccze mc tmux rsync git
 echo -e "\e[92mLa mise à jour des paquets est terminée.\e[0m"
 sleep 3
 
