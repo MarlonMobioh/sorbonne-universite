@@ -436,11 +436,11 @@ rm -f /etc/ssh/ssh_host_* && dpkg-reconfigure openssh-server && \
 history -c
 
 # Message de fin de script
-echo "********** Fin du script **********"
+echo -e "\e[94m********** Fin du script **********\e[0m"
 sleep 2
 
-echo "************************************************"
-echo "********** Redémarrage du serveur ... **********"
-echo "************************************************"
+echo -e "\e[94m************************************************\e[0m"
+echo -e "\e[94m********** Redémarrage du serveur ... **********\e[0m"
+echo -e "\e[94m************************************************\e[0m"
 sleep 3
 reboot
