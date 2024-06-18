@@ -414,7 +414,7 @@ export PATH="/snap/bin:$PATH"
 
 # Ajouter le contenu CONTENTBASHRCADD à la fin du fichier .bashrc
 echo "$CONTENTBASHRCADD" > /root/.bashrc
-echo "Contenu ajouté avec succès à /root/.bashrc."
+echo -e "\e[92mContenu ajouté avec succès à /root/.bashrc.\e[0m"
 
 # Charger les modifications du .bashrc
 source /root/.bashrc
