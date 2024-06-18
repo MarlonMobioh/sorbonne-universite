@@ -35,7 +35,7 @@ hostnamectl set-hostname "$new_hostname"
 
 # Redémarrer le service systemd-hostnamed pour appliquer les modifications
 systemctl restart systemd-hostnamed
-echo "Le nom de la machine a été modifié avec succès en : \e[92m$new_hostname\e[0m"
+echo -e "\e[92mLe nom de la machine a été modifié avec succès en : $new_hostname\e[0m"
 sleep 3
 
 # Demander à l'utilisateur l'adresse IP, le masque de sous-réseau et la passerelle
@@ -98,10 +98,10 @@ echo "Acquire::https::Proxy \"$PROXY_URL\";" | sudo tee -a /etc/apt/apt.conf.d/0
 echo "Acquire::ftp::Proxy \"$PROXY_URL\";" | sudo tee -a /etc/apt/apt.conf.d/01proxy
 
 # Vérification de la configuration du proxy
-echo "Les variables d'environnement de proxy sont configurées comme suit :"
+echo -e "\e[92mLes variables d'environnement de proxy sont configurées comme suit :\e[0m"
 cat /etc/environment | grep -E 'http_proxy|https_proxy|ftp_proxy|no_proxy'
 
-echo "Le fichier de configuration APT est configuré comme suit :"
+echo -e "\e[92mLe fichier de configuration APT est configuré comme suit :\e[0m"
 cat /etc/apt/apt.conf.d/01proxy
 
 # Déterminer l'adresse IP de la machine
@@ -287,7 +287,7 @@ firewall-cmd --zone=work --add-source=134.157.254.8 --permanent
 firewall-cmd --reload
 systemctl restart firewalld
 systemctl status firewalld
-echo "*** Le service firewalld a été redémarré.***"
+echo -e "\e[92m*** Le service firewalld a été redémarré.***\e[0m"
 sleep 3
 
 #Création du compte esiansible SU
@@ -302,7 +302,7 @@ echo "Adresse IP récupérée : $ip"
 sudo sed -i "s/^agentaddress .*/agentaddress 127.0.0.1,\[::1\],udp:$ip:161/" /etc/snmp/snmpd.conf
 
 # Afficher le contenu du fichier de configuration SNMP
-echo "Contenu de /etc/snmp/snmpd.conf après la mise à jour :"
+echo -e "\e[92mContenu de /etc/snmp/snmpd.conf après la mise à jour :\e[0m"
 cat /etc/snmp/snmpd.conf | grep 161
 sleep 3
 
@@ -319,7 +319,7 @@ ntp1="10.11.19.254"
 
 # Modifier le fichier /etc/systemd/timesyncd.conf avec l'adresse IP de la passerelle
 sudo sed -i "s/^NTP=.*/NTP=$ntp1/" /etc/systemd/timesyncd.conf
-echo "Configuration de /etc/systemd/timesyncd.conf avec l'adresse IP $ntp1 (r-v944.reseau.jussieu.fr) effectuée."
+echo -e "\e[92mConfiguration de /etc/systemd/timesyncd.conf avec l'adresse IP $ntp1 (r-v944.reseau.jussieu.fr) effectuée.\e[0m"
 cat /etc/systemd/timesyncd.conf | grep NTP
 
 # Redémarrer le service systemd-timesyncd pour appliquer les modifications + afficher le statut du service systemd-timesyncd
