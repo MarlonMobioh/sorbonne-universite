@@ -5,6 +5,9 @@ cd /tmp
 wget https://raw.githubusercontent.com/MarlonMobioh/SU/main/add_authorized_key_file.sh
 bash add_authorized_key_file.sh
 
+# ADD NEW_USERS FILE
+
+
 # ADD SUBSCRIPTION MANAGER REDHAT
 cd /tmp
 wget https://raw.githubusercontent.com/MarlonMobioh/SU/main/subscription_manager_redhat.sh
