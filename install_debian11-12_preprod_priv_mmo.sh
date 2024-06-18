@@ -328,6 +328,7 @@ systemctl status systemd-timesyncd
 sleep 3
 
 # Vérifier la synchronisation de l'horloge
+echo -e "\e[94m[Synchronisation de l'horloge] - Résultat:\e[0m"
 timedatectl
 sleep 3
 
