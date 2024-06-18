@@ -370,6 +370,8 @@ apt install -y lsof
 apt install -y vim
 apt install -y ccze mc tmux rsync htop net-tools dnsutils git
 
+echo -e "\e[94mModification du fichier /root/.bashrc Sorbonne Université :\e[0m"
+sleep 2
 # Modification du /root/.bashrc
 # Default prompt en cas de problème :
 # export PS1='\[\033[01;31m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
