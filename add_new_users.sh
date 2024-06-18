@@ -1,4 +1,4 @@
-# 
+#!/bin/bash
 
 # Définition des utilisateurs dans un tableau avec leur mot de passe respectif
 user_passwords=(
