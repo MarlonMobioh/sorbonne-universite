@@ -259,8 +259,9 @@ cat /etc/snmp/snmpd.conf | grep 161
 sleep 3
 
 # Redémarrer le service SNMP + afficher le statut du service SNMP
-sudo systemctl restart snmpd
-sudo systemctl status snmpd
+systemctl restart snmpd
+sleep 1
+systemctl status snmpd
 
 # Lister les ports en écoute
 echo -e "\e[94m[Liste des ports en écoute] - Résultat:\e[0m"
