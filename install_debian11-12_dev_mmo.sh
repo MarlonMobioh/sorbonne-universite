@@ -248,13 +248,13 @@ bash mise_en_conformite_esiansible.sh
 
 # Récupérer l'adresse IP de l'interface ens192
 ip=$(ip -4 addr show dev ens192 | grep inet | awk '{print $2}' | cut -d'/' -f1)
-echo "Adresse IP récupérée : $ip"
+echo -e "\e[92mAdresse IP récupérée : $ip\e[0m"
 
 # Mettre à jour le fichier de configuration SNMP
 sudo sed -i "s/^agentaddress .*/agentaddress 127.0.0.1,\[::1\],udp:$ip:161/" /etc/snmp/snmpd.conf
 
 # Afficher le contenu du fichier de configuration SNMP
-echo "Contenu de /etc/snmp/snmpd.conf après la mise à jour :"
+echo -e "\e[92mContenu de /etc/snmp/snmpd.conf après la mise à jour :\e[0m"
 cat /etc/snmp/snmpd.conf | grep 161
 sleep 3
 
