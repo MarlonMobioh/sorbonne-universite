@@ -30,15 +30,6 @@ fi
 echo -e "\e[91mQuel est le nouveau nom complet de la machine ? (format = server1.prod.dsi.sorbonne-universite.fr)\e[0m"
 read new_hostname
 
-# Modification du nom d'hôte
-echo "$new_hostname" | sudo tee /etc/hostname > /dev/null
-hostnamectl set-hostname "$new_hostname"
-
-# Redémarrer le service systemd-hostnamed pour appliquer les modifications
-systemctl restart systemd-hostnamed
-echo "Le nom de la machine a été modifié avec succès en : \e[92m$new_hostname\e[0m"
-sleep 3
-
 # Demander à l'utilisateur l'adresse IP, le masque de sous-réseau et la passerelle
 echo -e "\e[91mEntrez l'adresse IP : \e[0m" 
 read ip_address
@@ -74,17 +65,22 @@ iface ens192 inet static
 
 # Redémarrer le service réseau pour appliquer les modifications
 systemctl restart networking
-#ifdown ens192
-#ifup ens192
-#ip link set ens192 up
+systemctl status networking
+
+# Modification du nom d'hôte
+echo "$new_hostname" | sudo tee /etc/hostname > /dev/null
+hostnamectl set-hostname "$new_hostname"
+# Redémarrer le service systemd-hostnamed pour appliquer les modifications
+systemctl restart systemd-hostnamed
+echo -e "\e[92mLe nom de la machine a été modifié avec succès en : $new_hostname\e[0m"
 sleep 3
 
-echo "Adresse IP changée avec succès. Nouvelles valeurs :"
+echo -e "\e[92mAdresse IP changée avec succès. Nouvelles valeurs : \e[0m"
 ip addr show ens192 | grep -w inet
+sleep 3
 
 # Déterminer l'adresse IP de la machine
 machine_ip=$(hostname -I | awk '{print $1}')
-
 # Nom d'hôte à associer
 machine_hostname=$(hostname)
 
@@ -93,7 +89,8 @@ if ! grep -q "$machine_ip\s*$machine_hostname" /etc/hosts; then
     echo "L'adresse IP et/ou le nom d'hôte ne sont pas correctement définis dans /etc/hosts."
     echo "Ajout des entrées dans /etc/hosts..."
     echo "$machine_ip $machine_hostname" >> /etc/hosts
-    echo "Les entrées ont été ajoutées à /etc/hosts."
+    echo -e "\e[92mLes entrées ont été ajoutées à /etc/hosts.\e[0m"
+    sleep 3
 fi
 
 # Définition des utilisateurs dans un tableau avec leur mot de passe respectif
@@ -126,7 +123,7 @@ for user_pass in "${user_passwords[@]}"; do
 
         if ! user_in_sudo_group "$username"; then
             usermod -aG sudo "$username"
-            echo "Utilisateur $username ajouté au groupe sudo."
+            echo -e "\e[92mUtilisateur $username ajouté au groupe sudo.\e[0m"
         else
             echo "Utilisateur $username est déjà dans le groupe sudo. Ignorer l'ajout."
         fi
@@ -181,7 +178,6 @@ else
 fi
 sleep 2
 
-
 # Parcourir tous les répertoires utilisateur sous /home
 for user_home in /home/*; do
     if [ -d "$user_home" ]; then
@@ -209,40 +205,18 @@ for user_home in /home/*; do
             touch "$authorized_keys_file"
             chmod 600 "$authorized_keys_file"
             chown "$username:$username" "$authorized_keys_file"
-            echo "Fichier $authorized_keys_file créé pour l'utilisateur $username."
+            echo -e "\e[92mFichier $authorized_keys_file créé pour l'utilisateur $username.\e[0m"
         else
             echo "Le fichier $authorized_keys_file existe déjà pour l'utilisateur $username. Ignorer."
         fi
     fi
 done
 
-# Ajouter la configuration de firewall
-#firewall_config='<?xml version="1.0" encoding="utf-8"?>
-#<zone>
-#  <short>Work</short>
-#  <description>For use in work areas. You mostly trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.</description>
-#  <service name="ssh"/>
-#  <service name="http"/>
-#  <service name="https"/>
-#  <service name="cockpit"/>
-#  <source address="172.22.0.0/24"/>
-#  <source address="10.50.0.0/18"/>
-#  <source address="134.157.134.0/24"/>
-#  <source address="10.11.20.0/22"/>
-#  <source address="134.157.142.0/24"/>
-#  <source address="134.157.1.240/23"/>
-#  <source address="134.157.143.0/24"/>
-#  <source address="10.11.7.239"/>
-#  <source address="134.157.23.239"/>
-#  <source address="134.157.254.8"/>
-#  <source address="134.157.254.117"/> 
-#  <forward/>
-#</zone>'
+# Ajouter la configuration de firewall (PROD)
+# Ajouter les services et ports nécessaires à la zone work, internal
+echo -e "\e[94mAjout des services et ports nécessaires Sorbonne Université :\e[0m"
+sleep 2
 
-#echo "$firewall_config" > /etc/firewalld/zones/work.xml
-#echo "Configuration de firewall ajoutée dans work.xml."
-
-# Ajouter les services et ports nécessaires à la zone work + Ouvrir le port EON (supervision)
 firewall-cmd --zone=work --add-service=ssh --permanent
 firewall-cmd --zone=work --add-service=http --permanent
 firewall-cmd --zone=work --add-service=https --permanent
@@ -262,44 +236,46 @@ firewall-cmd --zone=work --add-source=134.157.1.128/25 --permanent
 firewall-cmd --zone=work --add-source=134.157.23.239 --permanent
 firewall-cmd --zone=work --add-source=134.157.254.8 --permanent
 
-
 # Redémarrer le service firewalld pour appliquer les modifications + afficher le statut du service firewalld
 firewall-cmd --reload
 systemctl restart firewalld
+echo -e "\e[92******\e[92mLe service firewalld a été redémarré.******\e[0m"
 systemctl status firewalld
-echo "*** Le service firewalld a été redémarré.***"
 sleep 3
 
 #Création du compte esiansible SU
+echo -e "\e[94mAjout du compte esiansible Sorbonne Université :\e[0m"
 wget https://gitlab.dsi.sorbonne-universite.fr/cherigui/dsi-public/-/raw/main/mise_en_conformite_esiansible.sh
 bash mise_en_conformite_esiansible.sh
 
 # Récupérer l'adresse IP de l'interface ens192
 ip=$(ip -4 addr show dev ens192 | grep inet | awk '{print $2}' | cut -d'/' -f1)
-echo "Adresse IP récupérée : $ip"
+echo -e "\e[92mAdresse IP récupérée : $ip\e[0m"
 
 # Mettre à jour le fichier de configuration SNMP
 sudo sed -i "s/^agentaddress .*/agentaddress 127.0.0.1,\[::1\],udp:$ip:161/" /etc/snmp/snmpd.conf
 
 # Afficher le contenu du fichier de configuration SNMP
-echo "Contenu de /etc/snmp/snmpd.conf après la mise à jour :"
+echo -e "\e[92mContenu de /etc/snmp/snmpd.conf après la mise à jour :\e[0m"
 cat /etc/snmp/snmpd.conf | grep 161
 sleep 3
 
 # Redémarrer le service SNMP + afficher le statut du service SNMP
-sudo systemctl restart snmpd
-sudo systemctl status snmpd
+systemctl restart snmpd
+sleep 1
+systemctl status snmpd
 
 # Lister les ports en écoute
+echo -e "\e[94m[Liste des ports en écoute] - Résultat:\e[0m"
 ss -ulnp | grep 161
 sleep 3
 
 # Récupérer l'adresse IP de la passerelle à partir de la variable existante
-ntp1="134.157.23.254"
+ntp1="134.157.33.254"
 
 # Modifier le fichier /etc/systemd/timesyncd.conf avec l'adresse IP de la passerelle
 sudo sed -i "s/^NTP=.*/NTP=$ntp1/" /etc/systemd/timesyncd.conf
-echo "Configuration de /etc/systemd/timesyncd.conf avec l'adresse IP $ntp1 (r-v46.reseau.jussieu.fr) effectuée."
+echo -e "\e[92mConfiguration de /etc/systemd/timesyncd.conf avec l'adresse IP $ntp1 (horlogegps.reseau.jussieu.fr) effectuée.\e[0m"
 cat /etc/systemd/timesyncd.conf | grep NTP
 
 # Redémarrer le service systemd-timesyncd pour appliquer les modifications + afficher le statut du service systemd-timesyncd
@@ -308,10 +284,13 @@ systemctl status systemd-timesyncd
 sleep 3
 
 # Vérifier la synchronisation de l'horloge
+echo -e "\e[94m[Synchronisation de l'horloge] - Résultat:\e[0m"
 timedatectl
 sleep 3
 
 # Update des paquets
+echo -e "\e[94mInstallation des paquets debian utiles Sorbonne Université :\e[0m"
+sleep 2
 apt-get update && apt-get -y upgrade && apt autoremove -y && apt-get clean -y
 
 # Retirer X11 pour améliorer les performances et la sécurité
@@ -328,7 +307,7 @@ apt install -y fail2ban
 apt install -y net-tools
 apt install -y psmisc
 apt install -y mailx
-apt install -y mailutils s-nail
+apt install -y mailutils
 apt install -y sasl2-bin
 apt install -y rsyslog
 apt install -y openssh-clients
@@ -350,6 +329,8 @@ apt install -y lsof
 apt install -y vim
 apt install -y ccze mc tmux rsync htop net-tools dnsutils git
 
+echo -e "\e[94mModification du fichier /root/.bashrc Sorbonne Université :\e[0m"
+sleep 2
 # Modification du /root/.bashrc
 # Default prompt en cas de problème :
 # export PS1='\[\033[01;31m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
@@ -394,7 +375,8 @@ export PATH="/snap/bin:$PATH"
 
 # Ajouter le contenu CONTENTBASHRCADD à la fin du fichier .bashrc
 echo "$CONTENTBASHRCADD" > /root/.bashrc
-echo "Contenu ajouté avec succès à /root/.bashrc."
+echo -e "\e[92mContenu ajouté avec succès à /root/.bashrc.\e[0m"
+sleep 3
 
 # Charger les modifications du .bashrc
 source /root/.bashrc
@@ -406,7 +388,7 @@ systemctl list-units --type=service
 
 # Régénérer les clef SSH du host
 rm -f /etc/ssh/ssh_host_* && dpkg-reconfigure openssh-server && \
-/etc/init.d/ssh restart
+systemctl restart ssh
 
 # Vidage du contenu des fichiers de journalisation système
 > /var/log/wtmp
@@ -415,13 +397,17 @@ rm -f /etc/ssh/ssh_host_* && dpkg-reconfigure openssh-server && \
 # Suppression history
 history -c
 
-
 # Nom du script
 script_name=$(basename "$0")
 # Ajouter un fichier de log pour indiquer que le script a été exécuté
 log_file="/var/log/mmo.log"
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Le script $script_name été executé sur la machine : $new_hostname par l'utilisateur, $(whoami)" >> "$log_file"
 sleep 3
+
+# Afficher un message de confirmation de la création du log
+echo -e "\e[92mLog enregistré dans $log_file\e[0m"
+sleep 3
+
 # Message de fin de script
 echo -e "\e[94m********** Fin du script **********\e[0m"
 sleep 2
