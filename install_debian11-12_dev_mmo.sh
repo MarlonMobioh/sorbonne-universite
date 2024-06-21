@@ -41,7 +41,7 @@ read gateway
 # Modifier le fichier /etc/network/interfaces avec les nouvelles valeurs
 echo "
 # ------------------------
-# Configuration du prompt | PEI-ESI (mmo,nsa)
+# Configuration du fichier network/interfaces | PEI-ESI (mmo,nsa)
 # ------------------------
 # This file describes the network interfaces available on your system
 # and how to activate them. For more information, see interfaces(5). 
