@@ -15,6 +15,7 @@
 # - Modification du /root/.bashrc
 # - Vérifier que tous les services critiques sont en cours d’exécution
 # - Suppression history / Suppression lastlog
+# - Renseignement dans fichier de log mmo.log
 # - Redemarrage du serveur
 #
 ##########################################################################################
@@ -48,6 +49,9 @@ read gateway
 
 # Modifier le fichier /etc/network/interfaces avec les nouvelles valeurs
 echo "
+# ------------------------
+# Configuration du fichier network/interfaces | PEI-ESI (mmo,nsa)
+# ------------------------
 # This file describes the network interfaces available on your system
 # and how to activate them. For more information, see interfaces(5). 
 
