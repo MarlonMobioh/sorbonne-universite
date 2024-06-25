@@ -268,10 +268,7 @@ sleep 3
 
 # Mise à jour des paquets [dnf update]
 echo -e "\e[94mMise à jour des paquets du serveur :\e[0m"
-dnf update -y
-dnf upgrade -y
-dnf autoremove -y
-dnf clean all -y
+dnf update -y && dnf upgrade -y && dnf autoremove -y && dnf clean all -y
 # Installation des paquets utiles
 dnf install -y inxi
 # Installation postfix (stoppé et désactivé)
