@@ -270,27 +270,11 @@ sleep 3
 echo -e "\e[94mMise à jour des paquets du serveur :\e[0m"
 dnf update -y && dnf upgrade -y && dnf autoremove -y && dnf clean all -y
 # Installation des paquets utiles
-dnf install -y inxi
+dnf install -y inxi ccze mc tmux rsync git lsof htop telnet unzip whois vim wget man tree gcc traceroute bind-utils mlocate lnav iotop dstat openssh-clients rsyslog cyrus-sasl mailx mailutils s-nail psmisc net-tools fail2ban shellcheck
 # Installation postfix (stoppé et désactivé)
 dnf install -y postfix
 systemctl stop postfix
 systemctl disable postfix
-dnf install -y shellcheck
-dnf install -y fail2ban
-dnf install -y net-tools
-dnf install -y psmisc
-dnf install -y mailx mailutils s-nail
-dnf install -y cyrus-sasl
-dnf install -y rsyslog
-dnf install -y openssh-clients
-dnf install -y dstat
-dnf install -y iotop 
-dnf install -y lnav
-dnf install -y mlocate
-dnf install -y bind-utils 
-dnf install -y traceroute
-dnf install -y lsof htop telnet unzip whois vim wget man tree gcc
-dnf install -y ccze mc tmux rsync git
 echo -e "\e[92mLa mise à jour des paquets est terminée.\e[0m"
 sleep 3
 
