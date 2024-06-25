@@ -339,37 +339,11 @@ apt-get update && apt-get -y upgrade && apt autoremove -y && apt-get clean -y
 apt-get purge x11-common libwayland-server0
 
 # Installation des paquets utiles
-apt install -y inxi
-#Installation postfix (stoppé et desactivé)
+apt install -y inxi shellcheck fail2ban net-tools psmisc mailx mailutils sasl2-bin rsyslog openssh-clients wget htop dstat iotop lnav mlocate man mail tree bind-utils whois traceroute unzip telnet lsof vim ccze mc tmux rsync htop net-tools dnsutils git
+#Installation postfix (stoppé et desactivé) 
 apt install -y postfix
 systemctl stop postfix
 systemctl disable postfix
-apt install -y shellcheck
-apt install -y fail2ban
-apt install -y net-tools
-apt install -y psmisc
-apt install -y mailx
-apt install -y mailutils s-nail
-apt install -y sasl2-bin
-apt install -y rsyslog
-apt install -y openssh-clients
-apt install -y wget
-apt install -y htop
-apt install -y dstat
-apt install -y iotop 
-apt install -y lnav
-apt install -y mlocate
-apt install -y man 
-apt install -y mail 
-apt install -y tree
-apt install -y bind-utils 
-apt install -y whois
-apt install -y traceroute
-apt install -y unzip
-apt install -y telnet 
-apt install -y lsof
-apt install -y vim
-apt install -y ccze mc tmux rsync htop net-tools dnsutils git
 
 echo -e "\e[94mModification du fichier /root/.bashrc Sorbonne Université :\e[0m"
 sleep 2
