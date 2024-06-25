@@ -319,6 +319,8 @@ apt install -y inxi shellcheck fail2ban net-tools psmisc mailx mailutils sasl2-b
 apt install -y postfix
 systemctl stop postfix
 systemctl disable postfix
+echo -e "\e[92mLa mise à jour des paquets est terminée.\e[0m"
+sleep 3
 
 # Modification du /root/.bashrc
 # Default prompt en cas de problème :
