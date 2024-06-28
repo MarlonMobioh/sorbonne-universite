@@ -45,7 +45,7 @@ interface="ens33"
 sudo nmcli connection modify $interface ipv4.addresses "${ip_address}/${subnet_mask}"
 sudo nmcli connection modify $interface ipv4.gateway "${gateway}"
 sudo nmcli connection modify $interface ipv4.method manual
-sudo nmcli connection modify $interface ipv4.dns "134.157.0.129 134.157.192.1"
+sudo nmcli connection modify $interface ipv4.dns "134.157.23.211"
 
 # Redémarrer l'interface réseau pour appliquer les modifications
 sudo nmcli connection down $interface && sudo nmcli connection up $interface
