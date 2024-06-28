@@ -59,7 +59,7 @@ iface ens192 inet static
 	netmask $subnet_mask
 	gateway $gateway
         # dns-* options are implemented by the resolvconf package, if installed
-        dns-nameservers 134.157.0.129 134.157.192.1
+        dns-nameservers 134.157.23.211
         dns-search sorbonne-universite.fr dsi.sorbonne-universite.fr
 " > /etc/network/interfaces
 
