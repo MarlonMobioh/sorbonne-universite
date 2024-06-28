@@ -60,7 +60,7 @@ iface ens192 inet static
 	gateway $gateway
         # dns-* options are implemented by the resolvconf package, if installed
         dns-nameservers 134.157.23.211
-        dns-search sorbonne-universite.fr dsi.sorbonne-universite.fr
+        dns-search sorbonne-universite.fr
 " > /etc/network/interfaces
 
 # Redémarrer le service réseau pour appliquer les modifications
