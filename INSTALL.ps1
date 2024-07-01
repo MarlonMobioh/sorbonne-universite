@@ -8,8 +8,8 @@ $nombreDeTentatives = 0
 $nombreMaxTentatives = 3
 
 do {
-    $Hostname = Read-Host "Renseigner le nom complet du serveur : (Le format de nommage  'd-')"
-    if ($Hostname -like "d-*") {
+    $Hostname = Read-Host "[Note1]Renseigner le nom complet du serveur : (format = server1.dev.dsi.priv.sorbonne-universite.fr)"
+    if ($Hostname -like "*.dev.dsi.priv.sorbonne-universite.fr") {
         break
     } else {
         $nombreDeTentatives++
@@ -18,7 +18,7 @@ do {
             pause
             exit
         } else {
-            Write-Host "Nom de serveur incorrect. Tentative $($nombreDeTentatives) sur $($nombreMaxTentatives)."
+            Write-Host "Nom de serveur incorrect. Tentative $($nombreDeTentatives) sur $($nombreMaxTentatives). Merci de relancer le script et respecter la regle de nommage (voir [Note1] en début de script)."
         }
     }
 } while ($true)
