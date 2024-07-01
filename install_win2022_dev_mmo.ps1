@@ -8,7 +8,7 @@ $nombreDeTentatives = 0
 $nombreMaxTentatives = 3
 
 do {
-    $Hostname = Read-Host "[Note1]Renseigner le nom complet du serveur : (format = server1.dev.dsi.priv.sorbonne-universite.fr)"
+    $Hostname = Read-Host "[Note1] Renseigner le nom complet du serveur : (format = server1.dev.dsi.priv.sorbonne-universite.fr)"
     if ($Hostname -like "*.dev.dsi.priv.sorbonne-universite.fr") {
         break
     } else {
